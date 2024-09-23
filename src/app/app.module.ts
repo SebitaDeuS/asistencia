@@ -16,23 +16,6 @@ import { Menulink } from './interfaces/menulink';
 })
 export class AppModule {
 
-  //HACER PRONTO
-  links:Menulink[]=[
-    {   
-      link:'/botones', 
-      icono:'radio-button-on-outline',
-      label:'botones'
-    },
-    {
-      link:'/alertas',
-      icono:'warning-outline',
-      label:'alertas'
-    },
-    {
-      link:'/formulario',
-      icono:'reader-outline',
-      label:'formulario'
-    }
-  ]
+
 }
 
