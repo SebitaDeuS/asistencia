@@ -16,14 +16,12 @@
    
  <div class="cuerpo">
   <ion-text color="primary" class="ion-text-center" ><h1>Lista de Clases</h1></ion-text>
-    
-  
 <ion-list [inset]="true" lines="full" mode="ios">
   <ion-list-header mode="ios" color="primary">
     <ion-label>Componentes</ion-label>
   </ion-list-header>
   <div class="scrollable-table">
-  <table>
+  <table >
     <tr>
         <th>Asignatura</th>
         <th>Sigla</th>
@@ -33,21 +31,21 @@
     <tr>
         <td>Programacion de Base de Datos</td>
         <td>MDY3131-002D</td>
-        <td><ion-button  expand="block" fill="clear" shape="round">
+        <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
           Abrir
         </ion-button></td>
     </tr>
     <tr>
       <td>Programacion Movil</td>
       <td>PGY4121-003D</td>
-      <td><ion-button  expand="block" fill="clear" shape="round">
+      <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
         Abrir
       </ion-button></td>
     </tr>
     <tr>
       <td>Programacion Movil</td>
       <td>PGY4121-004D</td>
-      <td><ion-button  expand="block" fill="clear" shape="round">
+      <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
         Abrir
       </ion-button></td>
       
@@ -55,7 +53,7 @@
     <tr>
       <td>Programacion de Base de Datos</td>
       <td>MDY3131-002D</td>
-      <td><ion-button  expand="block" fill="clear" shape="round">
+      <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
         Abrir
       </ion-button></td>
   </tr>

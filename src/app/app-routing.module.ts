@@ -14,9 +14,18 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
-  },  {
+  },
+  {
     path: 'vista-profe',
     loadChildren: () => import('./pages/vista-profe/vista-profe.module').then( m => m.VistaProfePageModule)
+  },
+  {
+    path: 'codigoprofe',
+    loadChildren: () => import('./pages/codigoprofe/codigoprofe.module').then( m => m.CodigoprofePageModule)
+  },
+  {
+    path: 'qrprofe',
+    loadChildren: () => import('./pages/qrprofe/qrprofe.module').then( m => m.QRProfePageModule)
   },
 
 ];

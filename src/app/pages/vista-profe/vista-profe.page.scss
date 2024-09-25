@@ -23,7 +23,9 @@
 }
 table {
    
-    margin: 20px auto;
+    margin: 0 ;
+    border-radius: 20px;
+    
     
 }
 
@@ -37,9 +39,12 @@ th, td {
     text-align: center;
     
 }
-
+td{
+    font-size: 12px;
+}
 th {
     background-color: blue;
+    
 }
 .scrollable-table {
     max-height: 320px; /* Ajusta el alto según tus necesidades */
