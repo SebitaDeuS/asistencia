@@ -8,7 +8,7 @@
       <form #miForm="ngForm" (ngSubmit)="iniciar_sesion()">
         <div class="container-form">
           <div class="ion-padding form">
-            <ion-input class="borde" label="Correo" label-placement="floating" fill="solid" [(ngModel)]="usr.username" placeholder="Correo" name="nombre-usuario"></ion-input>
+            <ion-input class="borde" label="Correo" label-placement="floating" fill="solid" [(ngModel)]="usr.username" placeholder="Correo" name="nombre-usuario"></ion-input> <br>
             <ion-input class="borde" label="Contraseña" type="password" label-placement="floating" fill="outline" [(ngModel)]="usr.password" placeholder="***********" name="password"></ion-input>
           </div>
           <ion-button type="submit" expand="block" fill="solid" [disabled]="miForm.invalid">

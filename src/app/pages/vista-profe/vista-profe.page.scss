@@ -1,0 +1,48 @@
+.container-primer{
+    background-color: blue;
+    height: 100px;
+    border-radius: 20px;
+}
+.buttons{
+    
+    
+    border: 1px solid blue;
+   
+}
+.cuerpo{
+    border: 1px solid red;
+}
+.titulo{
+    text-align: center;
+    padding-top: 90%;
+}
+.contenedor-imagen{
+    align-items: center;
+    display: flex;
+    border: 1px solid red;
+}
+table {
+   
+    margin: 20px auto;
+    
+}
+
+table, th, td {
+    border: 1px solid black;
+    
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    
+}
+
+th {
+    background-color: blue;
+}
+.scrollable-table {
+    max-height: 320px; /* Ajusta el alto según tus necesidades */
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }

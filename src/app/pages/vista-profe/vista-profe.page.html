@@ -1,0 +1,83 @@
+
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-capitalize" >Profesor</ion-title>
+    <ion-icon slot="end" name="person" class="ion-padding" size="large"></ion-icon>
+  
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="contenedor-imagen">
+    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+  </div>
+   
+ <div class="cuerpo">
+  <ion-text color="primary" class="ion-text-center" ><h1>Lista de Clases</h1></ion-text>
+    
+  
+<ion-list [inset]="true" lines="full" mode="ios">
+  <ion-list-header mode="ios" color="primary">
+    <ion-label>Componentes</ion-label>
+  </ion-list-header>
+  <div class="scrollable-table">
+  <table>
+    <tr>
+        <th>Asignatura</th>
+        <th>Sigla</th>
+        
+        <th>Operaciones</th>
+    </tr>
+    <tr>
+        <td>Programacion de Base de Datos</td>
+        <td>MDY3131-002D</td>
+        <td><ion-button  expand="block" fill="clear" shape="round">
+          Abrir
+        </ion-button></td>
+    </tr>
+    <tr>
+      <td>Programacion Movil</td>
+      <td>PGY4121-003D</td>
+      <td><ion-button  expand="block" fill="clear" shape="round">
+        Abrir
+      </ion-button></td>
+    </tr>
+    <tr>
+      <td>Programacion Movil</td>
+      <td>PGY4121-004D</td>
+      <td><ion-button  expand="block" fill="clear" shape="round">
+        Abrir
+      </ion-button></td>
+      
+    </tr>
+    <tr>
+      <td>Programacion de Base de Datos</td>
+      <td>MDY3131-002D</td>
+      <td><ion-button  expand="block" fill="clear" shape="round">
+        Abrir
+      </ion-button></td>
+  </tr>
+</table>
+</div>
+</ion-list>
+<div class="buttons">
+<ion-button type="submit" expand="block" fill="solid" >
+  Cerrar Sesion
+</ion-button>
+</div>
+    <!--  <div class="titulo" >
+      <h1>Asistencia</h1>
+    </div>
+    
+      <ion-button type="submit" expand="block" fill="solid">
+      Generar codigo QR
+    </ion-button>
+    <ion-button type="submit" expand="block" fill="solid" >
+      Cerrar Sesion
+    </ion-button>
+  </div>-->
+  </div> 
+  
+</ion-content>
