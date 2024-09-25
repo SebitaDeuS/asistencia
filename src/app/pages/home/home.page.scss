@@ -1,27 +1,32 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+ion-content {
+  --padding-top: 0;
+  --padding-bottom: 0; 
+  height: 100%;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center;
+  align-items: center; 
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.contenedor-titulo {
+  margin-bottom: 30px;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+.logo {
+  max-width: 90%;
+  height: auto; 
+  padding: 90px 0;
 }
 
-#container a {
-  text-decoration: none;
+.button-container {
+  display: flex;
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 30px; 
+  width: 100%; 
+  padding: 0 20px; 
 }
