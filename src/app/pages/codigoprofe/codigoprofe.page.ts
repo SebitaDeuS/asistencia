@@ -20,6 +20,9 @@ al_vistaProfe(){
 al_codigo(){
   this.router.navigate(["/qrprofe"])
 }
+a_lista(){
+  this.router.navigate(["/lista-pres"])
+}
 async alerta(){
   
  
