@@ -10,10 +10,21 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-card-content>
+  <div class="contenedor-imagen">
+    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+  </div>
+  <ion-card-content class="cuerpo">
     <ion-card-header>
-      <ion-card-subtitle>Awesome Subtitle</ion-card-subtitle>
-      <ion-card-title>Awesome Title</ion-card-title>
+   
+      <ion-card-title class="card-title">Codigo QR Asistencia</ion-card-title>
     </ion-card-header>
+    <div>
+      <img class="codigo" src="assets/img/Untitled (1).png" alt="">
+    </div>
+    <div class="buttons">
+      <ion-button type="submit" expand="block" fill="solid" (click)="al_vistaprofe()">
+       Volver
+      </ion-button>
+    </div>
   </ion-card-content>
 </ion-content>

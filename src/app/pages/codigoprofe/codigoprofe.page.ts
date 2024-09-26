@@ -25,7 +25,6 @@ async alerta(){
  
   const alert = await this.alertController.create({
     header: 'Advertencia',
-    
     message: 'Se Generara un Codigo, ¿Desea continuar?',
     backdropDismiss:false,
     buttons: [ 
