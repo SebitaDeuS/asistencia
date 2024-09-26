@@ -3,7 +3,8 @@
   <ion-header *ngIf="!isLoginPage()">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-back-button text="Volver"></ion-back-button>
+
+        <ion-back-button text="Volver" defaultHref="/home"></ion-back-button>
       </ion-buttons>
       <ion-title>
         <h3>{{ pageTitle }}</h3>

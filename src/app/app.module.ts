@@ -7,6 +7,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { Menulink } from './interfaces/menulink';
+import { Component } from '@angular/core';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,7 +16,6 @@ import { Menulink } from './interfaces/menulink';
   bootstrap: [AppComponent],
 })
 export class AppModule {
-
 
   
 
