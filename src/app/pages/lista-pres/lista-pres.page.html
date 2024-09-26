@@ -13,21 +13,46 @@
   <div class="contenedor-imagen">
     <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
   </div>
-  <ion-card-content class="cuerpo">
-    <ion-card-header>
-   
-      <ion-card-title class="card-title">Lista De Alumnos Presentes</ion-card-title>
-    </ion-card-header>
-    <div>
+    
+  <ion-list [inset]="true" lines="full" mode="ios">
+    <ion-list-header mode="ios" color="primary">
+      <ion-label>Lista de Alumnos</ion-label>
+    </ion-list-header>
+    <div  class="scrollable-table">
       <table>
-        <td>hola</td>
-        <td>hola</td>
+        <tr>
+          <th>Run</th>
+          <th>Nombre</th>
+          <th>Asistencia</th>
+      </tr>
+      <tr>
+        <td>21636372-8</td>
+        <td>Jonathan Molina</td>
+        <td>Pesente</td>
+      </tr>
+      <tr>
+        <td>21636372-8</td>
+        <td>Jonathan Molina</td>
+        <td>Pesente</td>
+      </tr>
+      <tr>
+        <td>21636372-8</td>
+        <td>Jonathan Molina</td>
+        <td>Pesente</td>
+      </tr>
+      <tr>
+        <td>21636372-8</td>
+        <td>Jonathan Molina</td>
+        <td>Pesente</td>
+      </tr>
       </table>
     </div>
     <div class="buttons">
-      <ion-button type="submit" expand="block" fill="solid" s>
+      <ion-button type="submit" expand="block" fill="solid" (click)="al_vistaprofe()">
        Volver
       </ion-button>
     </div>
-  </ion-card-content>
+  </ion-list>
+
+
 </ion-content>

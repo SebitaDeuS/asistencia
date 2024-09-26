@@ -1,0 +1,30 @@
+table {
+   
+    margin: 0 ;
+    border-radius: 20px;
+    margin-left: 19px;
+    
+}
+
+table, th, td {
+    border: 1px solid black;
+    
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    
+}
+td{
+    font-size: 12px;
+}
+th {
+    background-color: blue;
+    
+}
+.scrollable-table {
+    max-height: 320px; /* Ajusta el alto según tus necesidades */
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
