@@ -1,4 +1,15 @@
-.titulo_pr{
+ion-content {
+    --padding-top: 0;
+    --padding-bottom: 0; 
+    height: 82vh;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    margin-top: 200px;
+  }
+
+  .titulo_pr{
     border: 1px solid blue;
     text-align: center;
 }

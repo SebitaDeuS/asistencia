@@ -1,6 +1,16 @@
+ion-content {
+    --padding-top: 0;
+    --padding-bottom: 0; 
+    height: 82vh;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    margin-top: 200px;
+  }
 .container-primer{
     background-color: blue;
-    height: 100px;
+    height: 100%;
     border-radius: 20px;
 }
 .buttons{
@@ -11,6 +21,7 @@
 }
 .cuerpo{
     border: 1px solid red;
+    padding-bottom: 100px;
 }
 .titulo{
     text-align: center;
@@ -20,7 +31,9 @@
     align-items: center;
     display: flex;
     border: 1px solid red;
+    padding-top: 100px;
 }
+
 table {
    
     margin: 0 ;

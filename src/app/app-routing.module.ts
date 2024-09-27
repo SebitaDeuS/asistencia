@@ -35,6 +35,23 @@ const routes: Routes = [
     path: 'vista-perfil-usuario',
     loadChildren: () => import('./pages/vista-perfil-usuario/vista-perfil-usuario.module').then( m => m.VistaPerfilUsuarioPageModule)
   },
+
+  {
+    path: 'vista-profe',
+    loadChildren: () => import('./pages/vista-profe/vista-profe.module').then( m => m.VistaProfePageModule)
+  },
+  {
+    path: 'codigoprofe',
+    loadChildren: () => import('./pages/codigoprofe/codigoprofe.module').then( m => m.CodigoprofePageModule)
+  },
+  {
+    path: 'qrprofe',
+    loadChildren: () => import('./pages/qrprofe/qrprofe.module').then( m => m.QRProfePageModule)
+  },
+  {
+    path: 'lista-pres',
+    loadChildren: () => import('./pages/lista-pres/lista-pres.module').then( m => m.ListaPresPageModule)
+  },
 ];
 
 @NgModule({

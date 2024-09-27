@@ -1,3 +1,13 @@
+ion-content {
+    --padding-top: 0;
+    --padding-bottom: 0; 
+    height: 82vh;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    margin-top: 200px;
+  }
 .cuerpo{
     align-items: center;
     text-align: center;
