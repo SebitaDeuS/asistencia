@@ -1,10 +1,11 @@
-<ion-header>
-  <ion-toolbar color="tertiary">
+<ion-header class="header">
+  <ion-toolbar color="tertiary" slot="center">
+    <div >
+    <ion-title class="ion-text-capitalize"><h3>Home</h3></ion-title>
+  </div>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-capitalize" ><h3></h3></ion-title>
-    <ion-icon slot="end" name="person" class="ion-padding" size="large"></ion-icon>
+    
   
   </ion-toolbar>
 </ion-header>
@@ -37,9 +38,7 @@
       <ion-button  fill="clear" routerLink="/vista-perfil-usuario">
         <ion-icon slot="icon-only" name="person-outline" style="font-size: 30px; color: black;"></ion-icon>
       </ion-button>
-      <ion-button  fill="clear">
-        <ion-icon slot="icon-only" name="settings-outline" style="font-size: 30px; color: black;"></ion-icon>
-      </ion-button>
+  
     </div>
   </ion-toolbar>
 </ion-footer>
