@@ -1,13 +1,45 @@
-.container-form{
+.centrar-contenido {
+    display: flex;
+    justify-content: center; 
+    align-items: center;   
+    height: 100vh;     
+    overflow: hidden;  
+  }
+  
+.container-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 40%;
-}
+    align-items: center;
+    width: 100%;   
+    padding-top: 20px;   /* Limita el tamaño máximo del formulario */
+  }
+  
+.contenedor-titulo {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center; /* Centra el logo horizontalmente */
+  }
+  
+.logo {
+    padding-top: 90px;   
+    max-width: 100%;
+    height: auto;
+         /* Tamaño del logo ajustable */
+  }
+  
+.borde {
+    margin-bottom: 15px;      /* Añade un margen inferior entre los campos de entrada */
+    width: 100%;              /* Asegura que los inputs ocupen todo el ancho del contenedor */
+  }
 
-.contenedor-titulo{
-    
-    padding-top: 50px;
-    padding-bottom: 1px;
-
-}
+  .olvide-contrasena {
+    margin-top: 16px;
+    text-align: center;
+  }
+  
+  .olvide-contrasena ion-text {
+    cursor: pointer; /* Hace que el texto sea clicable */
+    font-weight: bold;
+  }

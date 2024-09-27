@@ -1,11 +1,16 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">
-  
-</ion-content>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="contenedor-titulo">
+    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+  </div>
+  <div class="button-container">
+    <ion-button  size="large" name="qr-code-outline" (click)="escanearQr()">
+      
+      <ion-icon name="qr-code-outline" style="padding-right: 20px;" ></ion-icon>Escanear QR
+    </ion-button>
+    <ion-button  size="large" (click)="asistencia()">
+      <ion-icon name="book-outline" style="padding-right: 20px;"></ion-icon>Ver asistencia
+    </ion-button>
+  </div>
+</ion-content>  

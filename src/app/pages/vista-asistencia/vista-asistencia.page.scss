@@ -1,0 +1,37 @@
+ion-content {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Alinea los elementos desde arriba */
+  align-items: center;
+}
+
+.contenedor-tabla {
+  width: 100%;
+  padding-top: 60px;
+}
+
+ion-list-header {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+ion-item {
+  --inner-padding-end: 10px; /* Ajusta el padding para el label de estado */
+}
+
+/* Agregar un tamaño limitado y scroll si el contenido excede */
+.limited-height-list {
+  max-height: 200px; /* Limita la altura del contenedor de la lista */
+  overflow-y: auto; /* Habilita el scroll vertical si los ítems exceden la altura */
+}
+
+ion-label[color="success"] {
+  color: green;
+}
+
+ion-label[color="danger"] {
+  color: red;
+}

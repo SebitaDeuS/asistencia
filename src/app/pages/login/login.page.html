@@ -1,21 +1,21 @@
-
-
-<ion-content [fullscreen]="true" class="ion-padding">
-
-      <div class="contenedor-titulo">
-        <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+<ion-content [fullscreen]="true" class="ion-padding centrar-contenido">
+  <div class="contenedor-titulo">
+    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+  </div>
+  <form #miForm="ngForm" (ngSubmit)="iniciar_sesion()">
+    <div class="container-form">
+      <div class="ion-padding form">
+        <ion-input class="borde" label="Correo" label-placement="floating" fill="solid" [(ngModel)]="usr.username" placeholder="Correo" name="nombre-usuario"></ion-input>
+        <ion-input class="borde" label="Contraseña" type="password" label-placement="floating" fill="outline" [(ngModel)]="usr.password" placeholder="***********" name="password"></ion-input>
       </div>
-      <form #miForm="ngForm" (ngSubmit)="iniciar_sesion()">
-        <div class="container-form">
-          <div class="ion-padding form">
-            <ion-input class="borde" label="Correo" label-placement="floating" fill="solid" [(ngModel)]="usr.username" placeholder="Correo" name="nombre-usuario"></ion-input> <br>
-            <ion-input class="borde" label="Contraseña" type="password" label-placement="floating" fill="outline" [(ngModel)]="usr.password" placeholder="***********" name="password"></ion-input>
-          </div>
-          <ion-button type="submit" expand="block" fill="solid" [disabled]="miForm.invalid">
-            Iniciar sesión
-          </ion-button>
-        </div>
-      </form>
+      <ion-button type="submit" expand="block" fill="solid" [disabled]="miForm.invalid">
+        Iniciar sesión  
+      </ion-button>
 
-      
+      <div class="olvide-contrasena"></div>
+        <ion-text color="primary" routerLink="/vista-olvide-contrasennia">
+          ¿Olvidaste tu contraseña?
+        </ion-text>
+      </div>
+  </form>
 </ion-content>
