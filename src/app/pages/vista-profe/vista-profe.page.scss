@@ -4,10 +4,12 @@
     border-radius: 20px;
 }
 
-
+.cuerpo {
+    padding-top: 5px;
+}
 .titulo{
     text-align: center;
-    padding-top: 90%;
+    padding-top: 10px;
 }
 .contenedor-imagen{
     align-items: center;
@@ -42,4 +44,7 @@ th {
     max-height: 320px; /* Ajusta el alto según tus necesidades */
     overflow-y: scroll;
     overflow-x: hidden;
+  }
+.buttons{
+margin-left: 200px;
   }
