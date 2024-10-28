@@ -1,12 +1,9 @@
 ion-content {
-    --padding-top: 0;
-    --padding-bottom: 0; 
-    height: 82vh;
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center;
-    align-items: center; 
-    margin-top: 200px;
+    --padding-bottom: 56px; /* Altura del footer, ajusta si es necesario */
+    height: calc(100vh - 56px); /* Ocupa todo el espacio, menos el footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 table {
    
@@ -37,4 +34,10 @@ th {
     max-height: 320px; /* Ajusta el alto según tus necesidades */
     overflow-y: scroll;
     overflow-x: hidden;
+  }
+
+  ion-footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
   }

@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { CodigoprofePageRoutingModule } from './codigoprofe-routing.module';
 
 import { CodigoprofePage } from './codigoprofe.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CodigoprofePageRoutingModule
+    CodigoprofePageRoutingModule,
+    SharedModule
   ],
   declarations: [CodigoprofePage]
 })

@@ -5,8 +5,27 @@
   <form #miForm="ngForm" (ngSubmit)="iniciar_sesion()">
     <div class="container-form">
       <div class="ion-padding form">
-        <ion-input class="borde" label="Correo" label-placement="floating" fill="solid" [(ngModel)]="usr.username" placeholder="Correo" name="nombre-usuario"></ion-input>
-        <ion-input class="borde" label="Contraseña" type="password" label-placement="floating" fill="outline" [(ngModel)]="usr.password" placeholder="***********" name="password"></ion-input>
+
+        <ion-input class="borde" 
+        label="Correo" 
+        label-placement="floating" 
+        fill="solid" 
+        [(ngModel)]="usr.email" 
+        placeholder="Correo" 
+        name="nombre-usuario">
+</ion-input>
+          
+
+           
+
+          <ion-input class="borde" label="Contraseña" [type]="hide ? 'password' : 'text'" label-placement="floating" fill="outline" [(ngModel)]="usr.password" placeholder="***********" name="password"><ion-icon
+            name="{{ hide ? 'eye-off-outline' : 'eye-outline' }}"
+            slot="end"
+            (click)="showPassword()"
+            style="cursor: pointer;"
+          ></ion-icon></ion-input>
+
+        
       </div>
       <ion-button type="submit" expand="block" fill="solid" [disabled]="miForm.invalid">
         Iniciar sesión  
