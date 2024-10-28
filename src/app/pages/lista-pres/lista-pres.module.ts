@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ListaPresPageRoutingModule } from './lista-pres-routing.module';
 
 import { ListaPresPage } from './lista-pres.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ListaPresPageRoutingModule
+    ListaPresPageRoutingModule,
+    SharedModule
   ],
   declarations: [ListaPresPage]
 })

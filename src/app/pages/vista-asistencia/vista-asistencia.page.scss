@@ -35,3 +35,9 @@ ion-label[color="success"] {
 ion-label[color="danger"] {
   color: red;
 }
+
+ion-footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}

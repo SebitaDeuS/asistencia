@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { VistaProfePageRoutingModule } from './vista-profe-routing.module';
 
 import { VistaProfePage } from './vista-profe.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    VistaProfePageRoutingModule
+    VistaProfePageRoutingModule,
+    SharedModule
   ],
   declarations: [VistaProfePage]
 })

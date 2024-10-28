@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { VistaPerfilUsuarioPageRoutingModule } from './vista-perfil-usuario-routing.module';
 
 import { VistaPerfilUsuarioPage } from './vista-perfil-usuario.page';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    VistaPerfilUsuarioPageRoutingModule
+    VistaPerfilUsuarioPageRoutingModule,
+    SharedModule
   ],
   declarations: [VistaPerfilUsuarioPage]
 })

@@ -1,10 +1,9 @@
 ion-content {
-  height: 82vh;
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center;
-  align-items: center; 
-
+  --padding-bottom: 56px; /* Altura del footer, ajusta si es necesario */
+  height: calc(100vh - 56px); /* Ocupa todo el espacio, menos el footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .header{
   text-align: center;
