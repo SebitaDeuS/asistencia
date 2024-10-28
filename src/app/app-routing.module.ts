@@ -51,7 +51,11 @@ const routes: Routes = [
   {
     path: 'lista-pres',
     loadChildren: () => import('./pages/lista-pres/lista-pres.module').then( m => m.ListaPresPageModule)
+  },  {
+    path: 'registro',
+    loadChildren: () => import('./pages/registro/registro.module').then( m => m.RegistroPageModule)
   },
+
 ];
 
 @NgModule({
