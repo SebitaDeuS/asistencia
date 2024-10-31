@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { FireBaseService } from 'src/app/services/fire-base.service';
 
 @Component({
   selector: 'app-vista-profe',
@@ -8,11 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VistaProfePage implements OnInit {
 
-  constructor(private router:Router) { }
+  asignaturas: any[] = [];
+
+  constructor(private router:Router, private firebaseService: FireBaseService) { }
 
   ngOnInit() {
+    // Obtener el ID del profesor autenticado y luego obtener sus asignaturas
+    this.firebaseService.getProfesorId().subscribe(profesorId => {
+      if (profesorId) {
+        this.firebaseService.getAsignaturasProfesor(profesorId).subscribe(asignaturas => {
+          this.asignaturas = asignaturas;
+        });
+      } else {
+        console.error('No se pudo obtener el ID del profesor');
+      }
+    });
   }
-  al_codigo(){
-    this.router.navigate(["/codigoprofe"]);
+
+  al_codigo(asignaturaId: string) {
+    this.router.navigate(['/codigoprofe', { asignaturaId }]);
   }
 }

@@ -27,35 +27,15 @@
         
         <th>Operaciones</th>
     </tr>
-    <tr>
-        <td>Programacion de Base de Datos</td>
-        <td>MDY3131-002D</td>
-        <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
+    <tr *ngFor="let asignatura of asignaturas">
+      <td>{{ asignatura.nombre }}</td>
+      <td>{{ asignatura.sigla }}</td>
+      <td>
+        <ion-button expand="block" fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
           Abrir
-        </ion-button></td>
+        </ion-button>
+      </td>
     </tr>
-    <tr>
-      <td>Programacion Movil</td>
-      <td>PGY4121-003D</td>
-      <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
-        Abrir
-      </ion-button></td>
-    </tr>
-    <tr>
-      <td>Programacion Movil</td>
-      <td>PGY4121-004D</td>
-      <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
-        Abrir
-      </ion-button></td>
-      
-    </tr>
-    <tr>
-      <td>Programacion de Base de Datos</td>
-      <td>MDY3131-002D</td>
-      <td><ion-button  expand="block" fill="clear" shape="round" (click)="al_codigo()">
-        Abrir
-      </ion-button></td>
-  </tr>
 </table>
 </div>
 </ion-list>
