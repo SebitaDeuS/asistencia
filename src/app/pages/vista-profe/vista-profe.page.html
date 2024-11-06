@@ -1,61 +1,65 @@
 
-<ion-header>
-  <ion-toolbar color="tertiary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
-    </ion-buttons>
-    <ion-title class="ion-text-capitalize" ><h3>Secciones</h3></ion-title>
-
+  <ion-header>
+    <ion-toolbar color="tertiary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
+      </ion-buttons>
+      <ion-title class="ion-text-capitalize"><h3>Secciones</h3></ion-title>
+    </ion-toolbar>
+  </ion-header>
   
-  </ion-toolbar>
-</ion-header>
-<ion-content [fullscreen]="true" >
-  <div class="contenedor-imagen">
-    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
-  </div>
- <div class="cuerpo">
-  <ion-text color="primary" class="ion-text-center" ><h1>Lista de Clases</h1></ion-text>
-<ion-list [inset]="true" lines="full" mode="ios">
-  <ion-list-header mode="ios" color="primary">
-    <ion-label>Componentes</ion-label>
-  </ion-list-header>
-  <div class="scrollable-table">
-  <table >
-    <tr>
-        <th>Asignatura</th>
-        <th>Sigla</th>
-        
-        <th>Operaciones</th>
-    </tr>
-    <tr *ngFor="let asignatura of asignaturas">
-      <td>{{ asignatura.nombre }}</td>
-      <td>{{ asignatura.sigla }}</td>
-      <td>
-        <ion-button expand="block" fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
-          Abrir
-        </ion-button>
-      </td>
-    </tr>
-</table>
-</div>
-</ion-list>
-<div class="buttons">
-
-</div>
-    <!--  <div class="titulo" >
-      <h1>Asistencia</h1>
+  <ion-content [fullscreen]="true">
+    <div class="contenedor-imagen">
+      <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
     </div>
-    
-      <ion-button type="submit" expand="block" fill="solid">
-      Generar codigo QR
-    </ion-button>
-    <ion-button type="submit" expand="block" fill="solid" >
-      Cerrar Sesion
-    </ion-button>
-  </div>-->
-  </div> 
+    <div class="cuerpo">
+      <ion-text color="primary" class="ion-text-center"><h1>Lista de Clases</h1></ion-text>
   
-</ion-content>
+      <ion-list [inset]="true" lines="full" mode="ios">
+        <ion-list-header mode="ios" color="primary">
+          <ion-label>Componentes</ion-label>
+        </ion-list-header>
+  
+        <div class="scrollable-table">
+          <table>
+            <tr>
+              <th>Asignatura</th>
+              <th>seccion</th>
+              <th>Operaciones</th>
+            </tr>
+  
+            <!-- Skeleton Loader cuando no hay asignaturas -->
+            <tr *ngIf="!asignaturas.length">
+              <td><ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></td>
+              <td><ion-skeleton-text animated style="width: 50%"></ion-skeleton-text></td>
+              <td>
+                <ion-button expand="block" fill="clear" shape="round" disabled>
+                  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+                </ion-button>
+              </td>
+            </tr>
+  
+            <!-- Tabla con datos cargados -->
+            <tr *ngIf="asignaturas.length > 0">
+              <ng-container *ngFor="let asignatura of asignaturas">
+                <td>{{ asignatura.nombre }}</td> <!-- Nombre del curso/asignatura -->
+                <td>{{ asignatura.id }}</td> <!-- ID de la sección -->
+                <td>
+                  <ion-button expand="block" fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
+                    Abrir
+                  </ion-button>
+                </td>
+              </ng-container>
+            </tr>
+          </table>
+        </div>
+      </ion-list>
+  
+      <div class="buttons">
+        <!-- Aquí puedes agregar otros botones si es necesario -->
+      </div>
+    </div>
+  </ion-content>
 
 
 <ion-footer>

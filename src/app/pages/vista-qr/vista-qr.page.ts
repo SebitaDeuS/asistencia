@@ -10,6 +10,7 @@ export class VistaQrPage implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
-
+  
 }

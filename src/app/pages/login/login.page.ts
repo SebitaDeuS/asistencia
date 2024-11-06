@@ -17,6 +17,7 @@ export class LoginPage implements OnInit {
     password: '',
   };
 
+
   hide: boolean = true;
 
   firebaseSvc = inject(FireBaseService);
@@ -36,17 +37,29 @@ export class LoginPage implements OnInit {
 
   async iniciar_sesion() {
     const user: User = {
-      uid: '', 
-      email: this.usr.email, 
+      uid: '',
+      email: this.usr.email,
       password: this.usr.password,
-      name: '' 
+      name: ''
     };
-    
+  
     await this.utilsSvc.showLoading(); // Mostrar el spinner de carga
     try {
       const result = await this.firebaseSvc.signIn(user);
       console.log('Usuario autenticado:', result.user);
-      this.router.navigate(['/home']); // Navegar a la página de inicio
+  
+      // Verificar el dominio del correo electrónico
+      if (user.email.endsWith('@profesor.com')) {
+        // Obtener el ID del profesor desde el resultado de autenticación
+        const profesorId = result.user?.uid;
+        if (profesorId) {
+          // Redirigir a la vista del profesor y pasar el ID como parámetro
+          this.router.navigate(['/vista-profe'], { queryParams: { profesorId } });
+        }
+      } else {
+        // Redirigir a la vista de alumno o a una página de inicio general
+        this.router.navigate(['/home']);
+      }
     } catch (error) {
       const alert = await this.alertController.create({
         header: 'Error',
