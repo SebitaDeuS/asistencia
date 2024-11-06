@@ -1,13 +1,25 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>registro</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title size="medium">registro</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">registro</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-text color="primary">
+    <h1>Su Registro</h1>
+  </ion-text>
+  <form #FormRegistro="ngForm" (ngSubmit)="registro()">
+    <ion-input  label="Correo Electronico" placeholder="Ingrese su Correo" required type="text" name="email" [(ngModel)]="usr.email" ></ion-input>
+    <ion-input  label="Contraseña" placeholder="Ingrese su Contraseña" required type="text" name="password" [(ngModel)]="usr.password"></ion-input>
+    <!-- <ion-input label="Repita su contraseña " placeholder="Ingrese su Contraseña"  required type="text"></ion-input> -->
+    <ion-button expand="full" color="tertiary" type="submit"  >
+      <ion-text color="light" >
+        Crear Usuario
+      </ion-text>
+      
+    </ion-button>
+  </form>
 </ion-content>
