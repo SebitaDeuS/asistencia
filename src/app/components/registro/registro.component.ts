@@ -25,6 +25,7 @@ export class RegisterComponent {
       const { email, password } = this.registerForm.value;
       try {
         await this.authService.registerUser(email, password);
+        
         console.log('Registro exitoso');
       } catch (error) {
         console.error('Error en el registro:', error);
