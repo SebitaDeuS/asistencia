@@ -14,6 +14,9 @@ import { Component } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth'; // Si usas autenticación
 import { environment } from '../environments/environment'; // Asegúrate de que la ruta sea correcta
+import { QRCodeModule } from 'angularx-qrcode';
+
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +26,7 @@ import { environment } from '../environments/environment'; // Asegúrate de que 
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule, // Módulo de autenticación de Firebase
+    QRCodeModule,  
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

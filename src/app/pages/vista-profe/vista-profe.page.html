@@ -20,44 +20,29 @@
           <ion-label>Componentes</ion-label>
         </ion-list-header>
   
-        <div class="scrollable-table">
-          <table>
-            <tr>
-              <th>Asignatura</th>
-              <th>seccion</th>
-              <th>Operaciones</th>
-            </tr>
+        <!-- Skeleton Loader cuando no hay asignaturas -->
+        <ng-container *ngIf="!asignaturas.length">
+          <ion-item>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </ion-item>
+          <ion-item>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </ion-item>
+        </ng-container>
   
-            <!-- Skeleton Loader cuando no hay asignaturas -->
-            <tr *ngIf="!asignaturas.length">
-              <td><ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></td>
-              <td><ion-skeleton-text animated style="width: 50%"></ion-skeleton-text></td>
-              <td>
-                <ion-button expand="block" fill="clear" shape="round" disabled>
-                  <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
-                </ion-button>
-              </td>
-            </tr>
-  
-            <!-- Tabla con datos cargados -->
-            <tr *ngIf="asignaturas.length > 0">
-              <ng-container *ngFor="let asignatura of asignaturas">
-                <td>{{ asignatura.nombre }}</td> <!-- Nombre del curso/asignatura -->
-                <td>{{ asignatura.id }}</td> <!-- ID de la sección -->
-                <td>
-                  <ion-button expand="block" fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
-                    Abrir
-                  </ion-button>
-                </td>
-              </ng-container>
-            </tr>
-          </table>
-        </div>
+        <!-- Lista de asignaturas y secciones cuando hay datos -->
+        <ng-container *ngFor="let asignatura of asignaturas">
+          <ion-item>
+            <ion-label>
+              <h2>{{ asignatura.nombre }}</h2> <!-- Nombre de la asignatura -->
+              <p>Sección: {{ asignatura.id }}</p> <!-- ID de la sección -->
+            </ion-label>
+            <ion-button fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
+              Abrir
+            </ion-button>
+          </ion-item>
+        </ng-container>
       </ion-list>
-  
-      <div class="buttons">
-        <!-- Aquí puedes agregar otros botones si es necesario -->
-      </div>
     </div>
   </ion-content>
 

@@ -33,6 +33,20 @@ export class CodigoprofePage implements OnInit {
       if (!this.profesorId) {
         console.error('No se encontró el ID del profesor');
       }
+    }); 
+  }
+
+
+
+
+  // Este método se ejecuta cuando se presiona el botón para generar el QR
+  generarQR() {
+    // Redirige a la página 'qrprofe' pasando los parámetros por URL
+    this.router.navigate(['/qrprofe'], {
+      queryParams: {
+        asignaturaId: this.asignaturaId,
+        profesorId: this.profesorId,
+      },
     });
   }
 

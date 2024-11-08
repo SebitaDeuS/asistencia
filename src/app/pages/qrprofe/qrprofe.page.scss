@@ -30,3 +30,10 @@ ion-footer {
     position: fixed;
     bottom: 0;
   }
+
+.qr-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}

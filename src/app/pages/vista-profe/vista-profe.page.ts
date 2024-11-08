@@ -10,7 +10,7 @@ import { forkJoin } from 'rxjs';
 })
 export class VistaProfePage implements OnInit {
 
-  asignaturas: any[] = []; // Almacenará las asignaturas del profesor
+  asignaturas: any[] = []; 
 
   constructor(
     private router: Router,
@@ -21,7 +21,7 @@ export class VistaProfePage implements OnInit {
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       const profesorId = params.get('profesorId');
-      console.log('ID Profesor recibido:', profesorId); // Verifica si se obtiene correctamente
+      console.log('ID Profesor recibido:', profesorId); 
       if (profesorId) {
         this.firebaseService.getAsignaturasProfesor(profesorId).subscribe(asignaturas => {
           this.asignaturas = asignaturas;
@@ -34,11 +34,11 @@ export class VistaProfePage implements OnInit {
   }
 
   al_codigo(asignaturaId: string) {
-    // Recuperar el ID del profesor desde la URL
+
     const profesorId = this.route.snapshot.queryParamMap.get('profesorId');
     
     if (profesorId) {
-      // Navegar a la página Codigoprofe con ambos parámetros
+   
       this.router.navigate(['/codigoprofe'], { queryParams: { profesorId, asignaturaId } });
 
     } else {

@@ -33,37 +33,46 @@ export class FireBaseService {
     return this.auth.authState.pipe(map(user => user ? user.uid : null));
   }
 
-  // Método para obtener las asignaturas que imparte el profesor
-   // Método para obtener las asignaturas del profesor
-   // Método para obtener las asignaturas del profesor
-   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
+
+
+  getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(
       concatMap(cursos => {
+        console.log('Cursos obtenidos:', cursos); // Verificar que se obtengan cursos
         return combineLatest(
           cursos.map(curso => {
             const cursoData = curso.payload.doc.data() as { nombre: string };
             const cursoId = curso.payload.doc.id;
+            console.log(`Curso ID: ${cursoId}, Nombre: ${cursoData.nombre}`); // Mostrar info del curso
 
             return this.firestore.collection(`cursos/${cursoId}/secciones`, ref =>
               ref.where('profesor.id_profesor', '==', idProfesor)
             ).snapshotChanges().pipe(
-              map(secciones =>
-                secciones.map(seccion => ({
+              map(secciones => {
+                const seccionesList = secciones.map(seccion => ({
                   id: seccion.payload.doc.id,
-                  nombre: cursoData.nombre,  // Incluye el nombre del curso
-                  ...(seccion.payload.doc.data() as object)  // Asegura que los datos sean un objeto
-                })))
+                  nombre: cursoData.nombre, // Nombre del curso
+                  ...(seccion.payload.doc.data() as object) // Datos de la sección
+                }));
+                console.log(`Secciones para el curso ${cursoData.nombre}:`, seccionesList); // Log de secciones
+                return seccionesList;
+              })
             );
           })
         );
       }),
-      map(cursos => cursos.reduce((acc, val) => acc.concat(val), []))  // Aplana el array de arrays
+      map(cursos => cursos.reduce((acc, val) => acc.concat(val), [])) // Aplanar array
     );
   }
 
   // Método para establecer la ID de la asignatura
   setAsignaturaId(id: string) {
     this.asignaturaIdSubject.next(id);
+  }
+
+
+  resetPassword(email: string): Promise<void> {
+    return this.auth.sendPasswordResetEmail(email);
   }
 
   // Método para obtener la ID de la asignatura

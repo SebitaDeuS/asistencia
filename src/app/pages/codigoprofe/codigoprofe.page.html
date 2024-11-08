@@ -1,10 +1,8 @@
 
 <ion-header>
   <ion-toolbar color="tertiary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/vista-profe" text="Volver"></ion-back-button>
-    </ion-buttons>
-    <ion-title class="ion-text-capitalize" >Profesor</ion-title>
+
+    <ion-title class="ion-text-capitalize">Profesor</ion-title>
   
   </ion-toolbar>
 </ion-header>
@@ -23,9 +21,7 @@
     </ion-card-content>
    
       <div class="buttons">
-        <ion-button class="but" type="submit" expand="block" fill="solid" (click)="alerta()">
-          Generar Codigo
-        </ion-button>
+        <ion-button class="but" type="submit" expand="block" fill="solid" (click)="generarQR()">Generar QR</ion-button>
         <ion-button class="but" type="submit" expand="block" fill="solid" (click)="a_lista()">
           Ver Lista de Alumnos
         </ion-button>

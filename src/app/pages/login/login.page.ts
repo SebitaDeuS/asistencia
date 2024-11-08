@@ -48,16 +48,16 @@ export class LoginPage implements OnInit {
       const result = await this.firebaseSvc.signIn(user);
       console.log('Usuario autenticado:', result.user);
   
-      // Verificar el dominio del correo electrónico
+   
       if (user.email.endsWith('@profesor.com')) {
-        // Obtener el ID del profesor desde el resultado de autenticación
+ 
         const profesorId = result.user?.uid;
         if (profesorId) {
-          // Redirigir a la vista del profesor y pasar el ID como parámetro
+         
           this.router.navigate(['/vista-profe'], { queryParams: { profesorId } });
         }
       } else {
-        // Redirigir a la vista de alumno o a una página de inicio general
+       
         this.router.navigate(['/home']);
       }
     } catch (error) {
@@ -68,7 +68,7 @@ export class LoginPage implements OnInit {
       });
       await alert.present();
     } finally {
-      await this.utilsSvc.hideLoading(); // Ocultar el spinner después de la autenticación
+      await this.utilsSvc.hideLoading(); 
     }
   }
 
