@@ -12,7 +12,7 @@
   <div class="contenedor-qr">
     <img class="logo" src="assets/img/scaner.png" alt="">
     <div class="contenedor-btn">
-      <ion-button class="">
+      <ion-button (click)="scan()" [disabled]="!isSupported">
         Escanear
       </ion-button>
     </div>

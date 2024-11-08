@@ -32,9 +32,8 @@ export class AuthService {
     if (userId) {
       const docRef = this.firestore
         .collection('cursos')  
-        .doc('FnU6lE1vSejqvw90bKUd') 
-        .collection('secciones')  
-        .doc('001');
+        .doc('Registro');
+       
         
       try {
         await this.utilsSvc.showLoading();
