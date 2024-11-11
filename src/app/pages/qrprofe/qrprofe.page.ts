@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { FireBaseService } from 'src/app/services/fire-base.service';
 
@@ -17,26 +17,64 @@ export class QRProfePage implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
-    // Obtener parámetros de la URL
-    this.route.queryParamMap.subscribe(params => {
-      this.asignaturaId = params.get('asignaturaId');
-      this.profesorId = params.get('profesorId');
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation && navigation.extras.state) {
+      this.profesorId = navigation.extras.state['profesorId'];
+      this.asignaturaId = navigation.extras.state['asignaturaId'];
+    } else {
+      // Usar sessionStorage como respaldo si `state` no está disponible
+      this.profesorId = sessionStorage.getItem('profesorId');
+      this.asignaturaId = sessionStorage.getItem('asignaturaId');
+    }
 
-      // Si ambos parámetros están disponibles, crea el string para el QR
-      if (this.asignaturaId && this.profesorId) {
-        this.qrData = `asignaturaId=${this.asignaturaId}&profesorId=${this.profesorId}`;
-        console.log('QR Data:', this.qrData);  
-      }
-    });
+    // Verificar que los datos estén disponibles para generar el QR
+    if (this.profesorId && this.asignaturaId) {
+      // Obtener fecha y hora actuales
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toLocaleDateString(); // Ej: "20/10/2024"
+      const horaFormateada = fechaActual.toLocaleTimeString(); // Ej: "10:15:30 AM"
+      
+      // Generar los datos del QR incluyendo fecha y hora
+      this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}&hora=${horaFormateada}`;
+      console.log('Datos del QR:', this.qrData);
+    } else {
+      console.error('No se encontraron datos del profesor o asignatura en QRProfePage');
+    }
   }
 
-  al_vistaProfe() {
+  al_codigo(asignaturaId: string) {
     const profesorId = this.route.snapshot.queryParamMap.get('profesorId');
     if (profesorId) {
-      this.router.navigate(['/vista-profe'], { queryParams: { profesorId } });
+      console.log('Navegando a codigoprofe con:', { profesorId, asignaturaId });
+  
+      // Guardar en sessionStorage como respaldo
+      sessionStorage.setItem('profesorId', profesorId);
+      sessionStorage.setItem('asignaturaId', asignaturaId);
+  
+      const navigationExtras: NavigationExtras = {
+        state: {
+          profesorId: profesorId,
+          asignaturaId: asignaturaId
+        }
+      };
+      this.router.navigate(['/codigoprofe'], navigationExtras);
     } else {
       console.error('No se encontró el ID del profesor');
     }
   }
+
+  al_vistaProfe() {
+    if (this.profesorId) {
+      const navigationExtras: NavigationExtras = {
+        state: {
+          profesorId: this.profesorId,
+        },
+      };
+      this.router.navigate(['/vista-profe'], navigationExtras);
+    } else {
+      console.error('No se encontró el ID del profesor');
+    }
+  }
+  
 
 }

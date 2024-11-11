@@ -1,5 +1,5 @@
 import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FireBaseService } from 'src/app/services/fire-base.service';
 import { ActivatedRoute } from '@angular/router';
@@ -12,51 +12,72 @@ import { NavController } from '@ionic/angular';
 export class CodigoprofePage implements OnInit {
   asignaturaId: string | null = null;
   profesorId: string | null = null;
+  qrData: string = '';
+
 
 
   constructor(private router: Router,
               private alertController: AlertController,
               private route: ActivatedRoute,
-              private navCtrl: NavController  // Agrega esto
+              private navCtrl: NavController  
             ) { }
 
-  ngOnInit() {
-    // Usamos queryParamMap para obtener los parámetros correctos de la URL
-    this.route.queryParamMap.subscribe(params => {
-      this.asignaturaId = params.get('asignaturaId');
-      this.profesorId = params.get('profesorId');
-      
-      console.log('ID de la asignatura:', this.asignaturaId);
-      console.log('ID del profesor:', this.profesorId);
+            ngOnInit() {
+              const navigation = this.router.getCurrentNavigation();
+              if (navigation && navigation.extras.state) {
+                this.profesorId = navigation.extras.state['profesorId'];
+                this.asignaturaId = navigation.extras.state['asignaturaId'];
+              } else {
+                // Obtener datos de sessionStorage si state no está disponible
+                this.profesorId = sessionStorage.getItem('profesorId');
+                this.asignaturaId = sessionStorage.getItem('asignaturaId');
+              }
+          
+              console.log('Valores obtenidos en CodigoprofePage:', {
+                profesorId: this.profesorId,
+                asignaturaId: this.asignaturaId
+              });
+          
+              if (this.profesorId && this.asignaturaId) {
+                console.log('Profesor ID:', this.profesorId);
+                console.log('Asignatura ID:', this.asignaturaId);
+              } else {
+                console.error('No se encontraron datos del profesor o asignatura.');
+              }
+            }
+            
 
-      // Si no se encontró el profesorId, muestra un error
-      if (!this.profesorId) {
-        console.error('No se encontró el ID del profesor');
-      }
-    }); 
-  }
 
-
-
-
-  // Este método se ejecuta cuando se presiona el botón para generar el QR
   generarQR() {
-    // Redirige a la página 'qrprofe' pasando los parámetros por URL
-    this.router.navigate(['/qrprofe'], {
-      queryParams: {
-        asignaturaId: this.asignaturaId,
-        profesorId: this.profesorId,
-      },
-    });
-  }
-
-  al_vistaProfe() {
-    const profesorId = this.route.snapshot.queryParamMap.get('profesorId');
-    if (profesorId) {
-      this.router.navigate(['/vista-profe'], { queryParams: { profesorId } });
+    if (this.profesorId && this.asignaturaId) {
+      // Obtener la fecha y hora actual
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toLocaleDateString(); // Ej: "20/10/2024"
+      const horaFormateada = fechaActual.toLocaleTimeString(); // Ej: "10:15:30 AM"
+      
+      // Generar los datos del QR incluyendo fecha y hora
+      this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}&hora=${horaFormateada}`;
+      
+      // Navegar a la vista donde se muestra el QR
+      const navigationExtras: NavigationExtras = {
+        state: {
+          profesorId: this.profesorId,
+          asignaturaId: this.asignaturaId,
+          qrData: this.qrData // Pasar los datos del QR
+        },
+      };
+      this.router.navigate(['/qrprofe'], navigationExtras);
     } else {
-      console.error('No se encontró el ID del profesor');
+      console.error('No se encontraron datos del profesor o asignatura para generar el QR');
     }
+  }
+  al_vistaProfe() {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        profesorId: this.profesorId
+      }
+    };
+    this.router.navigate(['/vista-profe'], navigationExtras);
   }
 
   al_codigo() {
@@ -70,24 +91,31 @@ export class CodigoprofePage implements OnInit {
   async alerta() {
     const alert = await this.alertController.create({
       header: 'Advertencia',
-      message: 'Se Generara un Codigo, ¿Desea continuar?',
+      message: 'Se Generará un Código, ¿Desea continuar?',
       backdropDismiss: false,
-      buttons: [ 
+      buttons: [
         {
           text: 'Cancelar',
           handler: () => {
-            this.router.navigate(["/codigoprofe"]);
-          }
+            this.router.navigate(['/codigoprofe']);
+          },
         },
         {
           text: 'Continuar',
           handler: () => {
-            this.router.navigate(['/qrprofe']);
-          }
-        }
+            const navigationExtras: NavigationExtras = {
+              state: {
+                profesorId: this.profesorId,
+                asignaturaId: this.asignaturaId,
+              },
+            };
+            this.router.navigate(['/qrprofe'], navigationExtras);
+          },
+        },
       ],
     });
 
     await alert.present();
   }
 }
+

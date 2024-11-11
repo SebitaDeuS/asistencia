@@ -1,36 +1,32 @@
+<ion-header>
+  <ion-toolbar color="tertiary">
+    <ion-title class="ion-text-capitalize"><h3>Secciones</h3></ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-header>
-    <ion-toolbar color="tertiary">
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
-      </ion-buttons>
-      <ion-title class="ion-text-capitalize"><h3>Secciones</h3></ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content [fullscreen]="true">
-    <div class="contenedor-imagen">
-      <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
-    </div>
-    <div class="cuerpo">
-      <ion-text color="primary" class="ion-text-center"><h1>Lista de Clases</h1></ion-text>
-  
-      <ion-list [inset]="true" lines="full" mode="ios">
-        <ion-list-header mode="ios" color="primary">
-          <ion-label>Componentes</ion-label>
-        </ion-list-header>
-  
-        <!-- Skeleton Loader cuando no hay asignaturas -->
-        <ng-container *ngIf="!asignaturas.length">
-          <ion-item>
-            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-          </ion-item>
-          <ion-item>
-            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-          </ion-item>
-        </ng-container>
-  
-        <!-- Lista de asignaturas y secciones cuando hay datos -->
+<ion-content [fullscreen]="true">
+  <div class="contenedor-imagen">
+    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+  </div>
+  <div class="cuerpo">
+    <ion-text color="primary" class="ion-text-center"><h1>Lista de Clases</h1></ion-text>
+
+    <ion-list [inset]="true" lines="full" mode="ios">
+      <ion-list-header mode="ios" color="primary">
+        <ion-label>Componentes</ion-label>
+      </ion-list-header>
+
+      <!-- Skeleton Loader cuando no hay asignaturas -->
+      <ng-container *ngIf="!asignaturas.length; else asignaturasLista">
+        <ion-item>
+          <ion-label color="medium" class="ion-text-center">
+            No hay asignaturas disponibles
+          </ion-label>
+        </ion-item>
+      </ng-container>
+
+      <!-- Lista de asignaturas y secciones cuando hay datos -->
+      <ng-template #asignaturasLista>
         <ng-container *ngFor="let asignatura of asignaturas">
           <ion-item>
             <ion-label>
@@ -42,21 +38,20 @@
             </ion-button>
           </ion-item>
         </ng-container>
-      </ion-list>
-    </div>
-  </ion-content>
-
+      </ng-template>
+    </ion-list>
+  </div>
+</ion-content>
 
 <ion-footer>
   <ion-toolbar>
-    <div class="footer-buttons" style="display: flex; justify-content: center; align-items: center;gap: 50px;width: 100%;font-size: 200px;">
-      <ion-button  routerLink="/home" fill="clear" color="custom">
-        <ion-icon slot="icon-only" name="home-outline"  style="font-size: 30px; color: black;"></ion-icon>
+    <div class="footer-buttons" style="display: flex; justify-content: center; align-items: center; gap: 50px; width: 100%;">
+      <ion-button routerLink="/home" fill="clear" color="custom">
+        <ion-icon slot="icon-only" name="home-outline" style="font-size: 30px; color: black;"></ion-icon>
       </ion-button>
-      <ion-button  fill="clear" routerLink="/vista-perfil-usuario">
+      <ion-button fill="clear">
         <ion-icon slot="icon-only" name="person-outline" style="font-size: 30px; color: black;"></ion-icon>
       </ion-button>
-      
     </div>
   </ion-toolbar>
 </ion-footer>

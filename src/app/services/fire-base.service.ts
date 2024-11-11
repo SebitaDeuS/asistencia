@@ -38,30 +38,30 @@ export class FireBaseService {
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(
       concatMap(cursos => {
-        console.log('Cursos obtenidos:', cursos); // Verificar que se obtengan cursos
+        // Filtra solo los cursos con nombre definido
+        const cursosFiltrados = cursos.filter(curso => {
+          const cursoData = curso.payload.doc.data() as { nombre?: string };
+          return cursoData.nombre; // Solo pasa si 'nombre' está definido
+        });
+  
         return combineLatest(
-          cursos.map(curso => {
+          cursosFiltrados.map(curso => {
             const cursoData = curso.payload.doc.data() as { nombre: string };
             const cursoId = curso.payload.doc.id;
-            console.log(`Curso ID: ${cursoId}, Nombre: ${cursoData.nombre}`); // Mostrar info del curso
-
+  
             return this.firestore.collection(`cursos/${cursoId}/secciones`, ref =>
               ref.where('profesor.id_profesor', '==', idProfesor)
             ).snapshotChanges().pipe(
-              map(secciones => {
-                const seccionesList = secciones.map(seccion => ({
-                  id: seccion.payload.doc.id,
-                  nombre: cursoData.nombre, // Nombre del curso
-                  ...(seccion.payload.doc.data() as object) // Datos de la sección
-                }));
-                console.log(`Secciones para el curso ${cursoData.nombre}:`, seccionesList); // Log de secciones
-                return seccionesList;
-              })
+              map(secciones => secciones.map(seccion => ({
+                id: seccion.payload.doc.id,
+                nombre: cursoData.nombre,  // Incluye el nombre del curso
+                ...(seccion.payload.doc.data() as object)  // Asegura que los datos sean un objeto
+              })))
             );
           })
         );
       }),
-      map(cursos => cursos.reduce((acc, val) => acc.concat(val), [])) // Aplanar array
+      map(cursos => cursos.reduce((acc, val) => acc.concat(val), []))  // Aplana el array de arrays
     );
   }
 
