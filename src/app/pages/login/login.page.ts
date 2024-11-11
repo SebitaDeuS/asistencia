@@ -1,6 +1,6 @@
 import { FireBaseService } from './../../services/fire-base.service';
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { UsuarioLog } from 'src/app/interfaces/i_usuario';
 import { User } from 'src/app/models/user.model';
@@ -43,21 +43,33 @@ export class LoginPage implements OnInit {
       name: ''
     };
   
-    await this.utilsSvc.showLoading(); // Mostrar el spinner de carga
+    await this.utilsSvc.showLoading();
     try {
       const result = await this.firebaseSvc.signIn(user);
       console.log('Usuario autenticado:', result.user);
   
-   
       if (user.email.endsWith('@profesor.com')) {
- 
         const profesorId = result.user?.uid;
         if (profesorId) {
-         
-          this.router.navigate(['/vista-profe'], { queryParams: { profesorId } });
+          // Obtén las asignaturas del profesor
+          this.firebaseSvc.getAsignaturasProfesor(profesorId).subscribe((asignaturas) => {
+            console.log('Asignaturas del profesor:', asignaturas);
+  
+            // Guarda en sessionStorage como respaldo
+            sessionStorage.setItem('profesorId', profesorId);
+            sessionStorage.setItem('asignaturas', JSON.stringify(asignaturas));
+  
+            // Usa NavigationExtras para pasar los datos a vista-profe sin exponer en la URL
+            const navigationExtras: NavigationExtras = {
+              state: {
+                profesorId: profesorId,
+                asignaturas: asignaturas,
+              }
+            };
+            this.router.navigate(['/vista-profe'], navigationExtras);
+          });
         }
       } else {
-       
         this.router.navigate(['/home']);
       }
     } catch (error) {
@@ -68,11 +80,10 @@ export class LoginPage implements OnInit {
       });
       await alert.present();
     } finally {
-      await this.utilsSvc.hideLoading(); 
+      await this.utilsSvc.hideLoading();
     }
   }
 
-  
   async alerta() {
     const alert = await this.alertController.create({
       header: 'Acceso denegado',
@@ -83,7 +94,7 @@ export class LoginPage implements OnInit {
           text: 'Aceptar',
           cssClass: 'btn-verde',
           handler: () => {
-            console.log('Apreto aceptar desde controller');
+            console.log('Apretó aceptar desde controller');
           },
         },
       ],

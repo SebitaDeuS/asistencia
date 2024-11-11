@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FireBaseService } from 'src/app/services/fire-base.service';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { NavigationExtras } from '@angular/router';
 @Component({
   selector: 'app-vista-profe',
   templateUrl: './vista-profe.page.html',
@@ -10,6 +11,7 @@ import { forkJoin } from 'rxjs';
 })
 export class VistaProfePage implements OnInit {
 
+  profesorId: string | null = null;
   asignaturas: any[] = []; 
 
   constructor(
@@ -19,28 +21,36 @@ export class VistaProfePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.queryParamMap.subscribe(params => {
-      const profesorId = params.get('profesorId');
-      console.log('ID Profesor recibido:', profesorId); 
-      if (profesorId) {
-        this.firebaseService.getAsignaturasProfesor(profesorId).subscribe(asignaturas => {
-          this.asignaturas = asignaturas;
-          console.log('Asignaturas del profesor:', this.asignaturas);
-        });
-      } else {
-        console.error('No se encontró el ID del profesor');
-      }
-    });
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation && navigation.extras.state) {
+      // Obtén profesorId y asignaturas de `state`
+      this.profesorId = navigation.extras.state['profesorId'];
+      this.asignaturas = navigation.extras.state['asignaturas'];
+    } else {
+      // Respaldo: obtén profesorId y asignaturas desde sessionStorage
+      this.profesorId = sessionStorage.getItem('profesorId');
+      this.asignaturas = JSON.parse(sessionStorage.getItem('asignaturas') || '[]');
+    }
+
+    console.log('Profesor ID en vista-profe:', this.profesorId);
+    console.log('Asignaturas en vista-profe:', this.asignaturas);
   }
 
   al_codigo(asignaturaId: string) {
-
-    const profesorId = this.route.snapshot.queryParamMap.get('profesorId');
-    
-    if (profesorId) {
-   
-      this.router.navigate(['/codigoprofe'], { queryParams: { profesorId, asignaturaId } });
-
+    if (this.profesorId) {
+      console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId });
+      
+      // Guarda en sessionStorage como respaldo
+      sessionStorage.setItem('profesorId', this.profesorId);
+      sessionStorage.setItem('asignaturaId', asignaturaId);
+  
+      const navigationExtras: NavigationExtras = {
+        state: {
+          profesorId: this.profesorId,
+          asignaturaId: asignaturaId
+        }
+      };
+      this.router.navigate(['/codigoprofe'], navigationExtras);
     } else {
       console.error('No se encontró el ID del profesor');
     }
