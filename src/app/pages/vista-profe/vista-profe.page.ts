@@ -23,11 +23,11 @@ export class VistaProfePage implements OnInit {
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras.state) {
-      // Obtén profesorId y asignaturas de `state`
+
       this.profesorId = navigation.extras.state['profesorId'];
       this.asignaturas = navigation.extras.state['asignaturas'];
     } else {
-      // Respaldo: obtén profesorId y asignaturas desde sessionStorage
+
       this.profesorId = sessionStorage.getItem('profesorId');
       this.asignaturas = JSON.parse(sessionStorage.getItem('asignaturas') || '[]');
     }
@@ -40,7 +40,7 @@ export class VistaProfePage implements OnInit {
     if (this.profesorId) {
       console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId });
       
-      // Guarda en sessionStorage como respaldo
+
       sessionStorage.setItem('profesorId', this.profesorId);
       sessionStorage.setItem('asignaturaId', asignaturaId);
   
