@@ -14,17 +14,39 @@
   <div class="contenedor-titulo">
     <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
   </div>
-  <div class="button-container">
-    <ion-button  size="large" name="qr-code-outline" (click)="escanearQr()">
-      
-      <ion-icon name="qr-code-outline" style="padding-right: 38px;" ></ion-icon>Escanear QR
-    </ion-button>
-
-    
-    <ion-button  size="large" (click)="asistencia()">
-      <ion-icon name="book-outline" style="padding-right: 20px;"></ion-icon>Ver asistencia
-    </ion-button>
+  <div>
+    <ion-item id="tarjeta">
+      <ion-avatar aria-hidden="true" slot="start">
+        <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+      <ion-label><ion-title>Bienvenido, {{ correo_alumno }}</ion-title></ion-label>
+    </ion-item>
   </div>
+  
+  <ion-card color="primary">
+    <ion-card-header>
+      <ion-card-title>Ver Lista de Asistencia</ion-card-title>
+      <ion-card-subtitle>Revisa tus Clases en las que estuviste Presente y Ausente</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content> <ion-button   (click)="escanearQr()">
+      Escanear QR
+    </ion-button></ion-card-content>
+  </ion-card>
+
+  <ion-card color="primary">
+    <ion-card-header>
+      <ion-card-title>Escanear QR</ion-card-title>
+      <ion-card-subtitle>
+        Escanea el QR de la Clase para estar Presente
+      </ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-button  (click)="asistencia()">Ver Asistencia</ion-button>
+      </ion-card-content>
+  </ion-card>
+
 
 </ion-content>  
 

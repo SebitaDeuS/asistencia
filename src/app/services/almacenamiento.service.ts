@@ -12,8 +12,11 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private utilsSvc:UtilsService,
+  
   ) {}
-
+  obtenerDatos() {
+    return this.firestore.collection('miColeccion').valueChanges();
+  }
   async registerUser(email: string, password: string) {
     try {
       const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, password);
@@ -28,7 +31,7 @@ export class AuthService {
     }
   }
 
-  public async saveUserDataToFirestore(userId: string | undefined, email: string, password: string) {
+  public async saveUserDataToFirestore(userId: string | undefined, email: string, contraseña: string) {
     if (userId) {
       const docRef = this.firestore
         .collection('cursos')  
@@ -44,7 +47,7 @@ export class AuthService {
             alumnos: firebase.firestore.FieldValue.arrayUnion({
               id_alumno: userId,
               correo_alumno: email,
-              contraseña_alumno: password
+              password: contraseña
             })
           });
         } else {
@@ -52,7 +55,7 @@ export class AuthService {
             alumnos: [{
               id_alumno: userId,
               correo_alumno: email,
-              contraseña_alumno: password
+              password: contraseña
             }]
           });
         }
@@ -66,4 +69,35 @@ export class AuthService {
       console.log('Error al guardar en Firestore: userId no definido');
     }
   }
+
+  //inicio el guardar datos escaneados
+//   async guardarDatosEscaneados(profesorId: string, asignaturaId: string, fecha: string, hora: string) {
+//     try {
+//       const docRef = this.firestore.collection('cursos').doc('FnU6lE1vSejqvw90bKUd').collection('secciones').doc(asignaturaId);
+//       const docSnapshot = await docRef.ref.get(); // Usando ref.get()
+//       if (!docSnapshot.exists) {
+//         throw new Error('Sección no encontrada');
+//       }
+      
+//       const seccionData = docSnapshot.data();
+      
+//       // Verificar que el ID del profesor coincida
+//       if (seccionData['profesor'].id_profesor === profesorId) {
+//         await docRef.update({
+//           alumnos: firebase.firestore.FieldValue.arrayUnion({
+//             id_profesor: profesorId,
+//             constrase: email,
+//             contraseña_alumno: password
+//           })
+//         });
+        
+//         console.log('Datos actualizados correctamente');
+//       } else {
+//         throw new Error('El ID del profesor no coincide');
+//       }
+//     } catch (error) {
+//       console.error('Error al guardar datos escaneados:', error);
+//     }
+//   }
+
 }

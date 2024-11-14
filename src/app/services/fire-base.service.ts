@@ -3,10 +3,10 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';  // Necesario para un almacenamiento reactivo
-
+import { catchError } from 'rxjs/operators';
+import { BehaviorSubject,Observable,} from 'rxjs';  // Necesario para un almacenamiento reactivo
 import { mergeMap, combineLatest, map, concatMap, of } from 'rxjs';
+import { Curso } from 'src/app/interfaces/i_usuario'; 
 @Injectable({
   providedIn: 'root'
 })
@@ -32,7 +32,38 @@ export class FireBaseService {
   getProfesorId(): Observable<string | null> {
     return this.auth.authState.pipe(map(user => user ? user.uid : null));
   }
-
+  getAlumnoData(id_alumno: string): Observable<any> {
+    return this.firestore
+      .collection('cursos')
+      .doc('Registro')
+      .collection('alumnos', ref => ref.where('id_alumno', '==', id_alumno)) // Filtra los documentos por id_alumno
+      .get()
+  }
+  getCorreoAlumno(id_alumno: string): Observable<string> {
+    return this.firestore.collection('cursos', ref => ref.where('alumnos', 'array-contains', { id_alumno: id_alumno }))
+      .get()
+      .pipe(
+        map(snapshot => {
+          let correo = 'Correo no disponible';
+          snapshot.forEach(doc => {
+            const data = doc.data() as Curso; // Obtener los datos correctamente usando `.data()`
+            const alumno = data.alumnos.find(al => al.id_alumno === id_alumno);
+            if (alumno) {
+              correo = alumno.correo_alumno;
+            }
+          });
+          return correo;
+        }),
+        catchError(error => {
+          console.error("Error obteniendo correo del alumno:", error);
+          return of('Correo no disponible');
+        })
+      );
+  }
+  async getCurrentUser(): Promise<string | null> {
+    const user = await this.auth.currentUser; // Usar Firebase Authentication
+    return user ? user.uid : null;  // Retorna el UID si está autenticado, o null si no lo está
+  }
 
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
@@ -65,6 +96,9 @@ export class FireBaseService {
     );
   }
 
+  
+
+  
   // Método para establecer la ID de la asignatura
   setAsignaturaId(id: string) {
     this.asignaturaIdSubject.next(id);

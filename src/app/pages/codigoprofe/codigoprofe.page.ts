@@ -50,15 +50,12 @@ export class CodigoprofePage implements OnInit {
 
   generarQR() {
     if (this.profesorId && this.asignaturaId) {
-      // Obtener la fecha y hora actual
       const fechaActual = new Date();
-      const fechaFormateada = fechaActual.toLocaleDateString(); // Ej: "20/10/2024"
-      const horaFormateada = fechaActual.toLocaleTimeString(); // Ej: "10:15:30 AM"
+      const fechaFormateada = fechaActual.toLocaleDateString(); 
+      const horaFormateada = fechaActual.toLocaleTimeString(); 
       
-      // Generar los datos del QR incluyendo fecha y hora
       this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}&hora=${horaFormateada}`;
       
-      // Navegar a la vista donde se muestra el QR
       const navigationExtras: NavigationExtras = {
         state: {
           profesorId: this.profesorId,
