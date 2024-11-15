@@ -15,6 +15,7 @@ export class LoginPage implements OnInit {
   usr: UsuarioLog = {
     email: '',
     password: '',
+    nombre_alumno:'',
   };
 
 
@@ -40,7 +41,7 @@ export class LoginPage implements OnInit {
       uid: '',
       email: this.usr.email,
       password: this.usr.password,
-      name: ''
+      name: this.usr.nombre_alumno
     };
   
     await this.utilsSvc.showLoading();
@@ -70,7 +71,19 @@ export class LoginPage implements OnInit {
           });
         }
       } else {
-        this.router.navigate(['/home']);
+        this.firebaseSvc.getAlumnoData(user.email).subscribe((studentData) => {
+          console.log('correo alumno',user.email)
+          console.log('Datos del estudiante:', studentData);
+          console.log('Estructura de studentData:', JSON.stringify(studentData));
+  
+          // Pasar los datos a la página de inicio
+          const navigationExtras: NavigationExtras = {
+            state: {
+              studentData: JSON.parse(JSON.stringify(studentData)) // Supone que hay un solo documento por correo de alumno
+            }
+          };
+          this.router.navigate(['/home'], navigationExtras);
+        });
       }
     } catch (error) {
       const alert = await this.alertController.create({

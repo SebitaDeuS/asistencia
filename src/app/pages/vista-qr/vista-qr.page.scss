@@ -10,11 +10,22 @@ ion-content {
 }
   
 .contenedor-qr {
-
     display: flex; 
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center; 
-    padding-top: 200px;
+    padding-top: 40%;
     gap: 20px; 
   }
+.tarjeta_header{
+  text-align: center;
+}
+.tarjeta_content{
+  align-items: center;
+  border-top:  solid black;
+  text-align: center;
+}
+.tarjeta_content .logo{
+  align-items: center;
+
+}

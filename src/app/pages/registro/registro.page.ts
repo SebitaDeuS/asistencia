@@ -14,6 +14,7 @@ export class RegistroPage implements OnInit {
   usr: UsuarioLog = {
     email: '',
     password: '',
+    nombre_alumno:'',
   };
 
 
@@ -45,7 +46,9 @@ export class RegistroPage implements OnInit {
           await this.authService.saveUserDataToFirestore(
             userCredential.user.uid,
             this.usr.email,
-            this.usr.password
+            this.usr.password,
+            this.usr.nombre_alumno
+            
           );
         }
         this.router.navigate(['/login']);

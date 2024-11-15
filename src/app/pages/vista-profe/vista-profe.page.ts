@@ -23,11 +23,11 @@ export class VistaProfePage implements OnInit {
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras.state) {
-      // Obtén profesorId y asignaturas de `state`
+
       this.profesorId = navigation.extras.state['profesorId'];
       this.asignaturas = navigation.extras.state['asignaturas'];
     } else {
-      // Respaldo: obtén profesorId y asignaturas desde sessionStorage
+
       this.profesorId = sessionStorage.getItem('profesorId');
       this.asignaturas = JSON.parse(sessionStorage.getItem('asignaturas') || '[]');
     }
@@ -36,23 +36,25 @@ export class VistaProfePage implements OnInit {
     console.log('Asignaturas en vista-profe:', this.asignaturas);
   }
 
-  al_codigo(asignaturaId: string) {
+  al_codigo(asignaturaId: string, cursoId: string) {
     if (this.profesorId) {
-      console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId });
-      
-      // Guarda en sessionStorage como respaldo
-      sessionStorage.setItem('profesorId', this.profesorId);
-      sessionStorage.setItem('asignaturaId', asignaturaId);
-  
-      const navigationExtras: NavigationExtras = {
-        state: {
-          profesorId: this.profesorId,
-          asignaturaId: asignaturaId
-        }
-      };
-      this.router.navigate(['/codigoprofe'], navigationExtras);
+        console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId, cursoId });
+        
+        // Guarda en sessionStorage como respaldo
+        sessionStorage.setItem('profesorId', this.profesorId);
+        sessionStorage.setItem('asignaturaId', asignaturaId);
+        sessionStorage.setItem('cursoId', cursoId);
+
+        const navigationExtras: NavigationExtras = {
+            state: {
+                profesorId: this.profesorId,
+                asignaturaId: asignaturaId,
+                cursoId: cursoId,
+            }
+        };
+        this.router.navigate(['/codigoprofe'], navigationExtras);
     } else {
-      console.error('No se encontró el ID del profesor');
+        console.error('No se encontró el ID del profesor');
     }
-  }
+}
 }

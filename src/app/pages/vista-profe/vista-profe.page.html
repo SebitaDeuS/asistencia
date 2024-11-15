@@ -16,7 +16,7 @@
         <ion-label>Componentes</ion-label>
       </ion-list-header>
 
-      <!-- Skeleton Loader cuando no hay asignaturas -->
+
       <ng-container *ngIf="!asignaturas.length; else asignaturasLista">
         <ion-item>
           <ion-label color="medium" class="ion-text-center">
@@ -25,15 +25,15 @@
         </ion-item>
       </ng-container>
 
-      <!-- Lista de asignaturas y secciones cuando hay datos -->
+   
       <ng-template #asignaturasLista>
         <ng-container *ngFor="let asignatura of asignaturas">
           <ion-item>
             <ion-label>
-              <h2>{{ asignatura.nombre }}</h2> <!-- Nombre de la asignatura -->
-              <p>Sección: {{ asignatura.id }}</p> <!-- ID de la sección -->
+              <h2>{{ asignatura.nombre }}</h2> 
+              <p>Sección: {{ asignatura.id }}</p> 
             </ion-label>
-            <ion-button fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
+            <ion-button fill="clear" shape="round" (click)="al_codigo(asignatura.id, asignatura.cursoId)">
               Abrir
             </ion-button>
           </ion-item>
@@ -46,7 +46,7 @@
 <ion-footer>
   <ion-toolbar>
     <div class="footer-buttons" style="display: flex; justify-content: center; align-items: center; gap: 50px; width: 100%;">
-      <ion-button routerLink="/home" fill="clear" color="custom">
+      <ion-button routerLink="/vista-profe" fill="clear" color="custom">
         <ion-icon slot="icon-only" name="home-outline" style="font-size: 30px; color: black;"></ion-icon>
       </ion-button>
       <ion-button fill="clear">
