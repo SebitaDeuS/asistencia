@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { FireBaseService } from 'src/app/services/fire-base.service';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { concatMap, of } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 @Component({
   selector: 'app-codigoprofe',
   templateUrl: './codigoprofe.page.html',
@@ -13,39 +15,43 @@ export class CodigoprofePage implements OnInit {
   asignaturaId: string | null = null;
   profesorId: string | null = null;
   qrData: string = '';
+  seccionId: string = '';
 
 
 
   constructor(private router: Router,
-              private alertController: AlertController,
-              private route: ActivatedRoute,
-              private navCtrl: NavController  
-            ) { }
+    private alertController: AlertController,
+    private route: ActivatedRoute,
+    private navCtrl: NavController,
+    private firebase: AngularFirestore,
+    private firebsv: FireBaseService,
 
-            ngOnInit() {
-              const navigation = this.router.getCurrentNavigation();
-              if (navigation && navigation.extras.state) {
-                this.profesorId = navigation.extras.state['profesorId'];
-                this.asignaturaId = navigation.extras.state['asignaturaId'];
-              } else {
-                // Obtener datos de sessionStorage si state no está disponible
-                this.profesorId = sessionStorage.getItem('profesorId');
-                this.asignaturaId = sessionStorage.getItem('asignaturaId');
-              }
-          
-              console.log('Valores obtenidos en CodigoprofePage:', {
-                profesorId: this.profesorId,
-                asignaturaId: this.asignaturaId
-              });
-          
-              if (this.profesorId && this.asignaturaId) {
-                console.log('Profesor ID:', this.profesorId);
-                console.log('Asignatura ID:', this.asignaturaId);
-              } else {
-                console.error('No se encontraron datos del profesor o asignatura.');
-              }
-            }
-            
+  ) { }
+
+  ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation && navigation.extras.state) {
+      this.profesorId = navigation.extras.state['profesorId'];
+      this.asignaturaId = navigation.extras.state['asignaturaId'];
+    } else {
+      // Obtener datos de sessionStorage si state no está disponible
+      this.profesorId = sessionStorage.getItem('profesorId');
+      this.asignaturaId = sessionStorage.getItem('asignaturaId');
+    }
+
+    console.log('Valores obtenidos en CodigoprofePage:', {
+      profesorId: this.profesorId,
+      asignaturaId: this.asignaturaId
+    });
+
+    if (this.profesorId && this.asignaturaId) {
+      console.log('Profesor ID:', this.profesorId);
+      console.log('Asignatura ID:', this.asignaturaId);
+    } else {
+      console.error('No se encontraron datos del profesor o asignatura.');
+    }
+  }
+
 
 
   generarQR() {
@@ -54,10 +60,10 @@ export class CodigoprofePage implements OnInit {
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toLocaleDateString(); // Ej: "20/10/2024"
       const horaFormateada = fechaActual.toLocaleTimeString(); // Ej: "10:15:30 AM"
-      
+  
       // Generar los datos del QR incluyendo fecha y hora
       this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}&hora=${horaFormateada}`;
-      
+  
       // Navegar a la vista donde se muestra el QR
       const navigationExtras: NavigationExtras = {
         state: {
@@ -67,6 +73,20 @@ export class CodigoprofePage implements OnInit {
         },
       };
       this.router.navigate(['/qrprofe'], navigationExtras);
+  
+      // Verificar que asignaturaId esté definido antes de intentar actualizar la clase
+      if (this.asignaturaId) {
+        // Guardar la fecha de la clase en Firestore
+        this.firebsv.updateFechaClase(this.asignaturaId, this.profesorId, this.asignaturaId, fechaFormateada)
+          .then(() => {
+            console.log('Clase guardada con éxito');
+          })
+          .catch(error => {
+            console.error('Error al guardar clase:', error);
+          });
+      } else {
+        console.error('El ID de la asignatura no está definido o está vacío');
+      }
     } else {
       console.error('No se encontraron datos del profesor o asignatura para generar el QR');
     }

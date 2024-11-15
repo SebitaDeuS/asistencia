@@ -28,14 +28,11 @@ export class AuthService {
     }
   }
 
-  public async saveUserDataToFirestore(userId: string | undefined, email: string, password: string) {
+  public async saveUserDataToFirestore(userId: string | undefined, email: string, password: string,nombre:string) {
     if (userId) {
       const docRef = this.firestore
-        .collection('cursos')  
-        .doc('FnU6lE1vSejqvw90bKUd') 
-        .collection('secciones')  
-        .doc('001');
-        
+        .collection('Registro')  
+        .doc('alumno');
       try {
         await this.utilsSvc.showLoading();
         const docSnapshot = await docRef.get().toPromise();
@@ -45,7 +42,8 @@ export class AuthService {
             alumnos: firebase.firestore.FieldValue.arrayUnion({
               id_alumno: userId,
               correo_alumno: email,
-              contraseña_alumno: password
+              contraseña_alumno: password,
+              nombre_alumno:nombre,
             })
           });
         } else {
@@ -53,7 +51,8 @@ export class AuthService {
             alumnos: [{
               id_alumno: userId,
               correo_alumno: email,
-              contraseña_alumno: password
+              contraseña_alumno: password,
+              nombre_alumno:nombre,
             }]
           });
         }
