@@ -40,11 +40,16 @@ export class VistaProfePage implements OnInit {
     if (this.profesorId) {
         console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId, cursoId });
         
+        // Guarda en sessionStorage como respaldo
+        sessionStorage.setItem('profesorId', this.profesorId);
+        sessionStorage.setItem('asignaturaId', asignaturaId);
+        sessionStorage.setItem('cursoId', cursoId);
+
         const navigationExtras: NavigationExtras = {
             state: {
                 profesorId: this.profesorId,
                 asignaturaId: asignaturaId,
-                cursoId: cursoId  // Incluimos el cursoId
+                cursoId: cursoId,
             }
         };
         this.router.navigate(['/codigoprofe'], navigationExtras);

@@ -35,33 +35,33 @@ export class FireBaseService {
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(
-      concatMap(cursos => {
-        const cursosFiltrados = cursos.filter(curso => {
-          const cursoData = curso.payload.doc.data() as { nombre?: string };
-          return cursoData.nombre;
-        });
-  
-        return combineLatest(
-          cursosFiltrados.map(curso => {
-            const cursoData = curso.payload.doc.data() as { nombre: string };
-            const cursoId = curso.payload.doc.id;
-  
-            return this.firestore.collection(`cursos/${cursoId}/secciones`, ref =>
-              ref.where('profesor.id_profesor', '==', idProfesor)
-            ).snapshotChanges().pipe(
-              map(secciones => secciones.map(seccion => ({
-                id: seccion.payload.doc.id,
-                cursoId,  // Agregar el ID del curso aquí
-                nombre: cursoData.nombre,
-                ...(seccion.payload.doc.data() as object)
-              })))
+        concatMap(cursos => {
+            const cursosFiltrados = cursos.filter(curso => {
+                const cursoData = curso.payload.doc.data() as { nombre?: string };
+                return cursoData.nombre; // Solo pasa si 'nombre' está definido
+            });
+
+            return combineLatest(
+                cursosFiltrados.map(curso => {
+                    const cursoData = curso.payload.doc.data() as { nombre: string };
+                    const cursoId = curso.payload.doc.id;
+
+                    return this.firestore.collection(`cursos/${cursoId}/secciones`, ref =>
+                        ref.where('profesor.id_profesor', '==', idProfesor)
+                    ).snapshotChanges().pipe(
+                        map(secciones => secciones.map(seccion => ({
+                            cursoId: cursoId, // Incluye el cursoId
+                            id: seccion.payload.doc.id,
+                            nombre: cursoData.nombre, // Incluye el nombre del curso
+                            ...(seccion.payload.doc.data() as object) // Asegura que los datos sean un objeto
+                        })))
+                    );
+                })
             );
-          })
-        );
-      }),
-      map(cursos => cursos.reduce((acc, val) => acc.concat(val), []))
+        }),
+        map(cursos => cursos.reduce((acc, val) => acc.concat(val), [])) // Aplana el array de arrays
     );
-  }
+}
   async updateFechaClase(cursoId: string, asignaturaId: string, seccionId: string, fecha: string) {
     if (!cursoId || !asignaturaId || !seccionId) {
         console.error('Parámetros incompletos:', { cursoId, asignaturaId, seccionId });

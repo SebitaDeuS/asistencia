@@ -34,55 +34,56 @@ export class CodigoprofePage implements OnInit {
     if (navigation && navigation.extras.state) {
         this.profesorId = navigation.extras.state['profesorId'];
         this.asignaturaId = navigation.extras.state['asignaturaId'];
-        this.cursoId = navigation.extras.state['cursoId'];  // Recibimos cursoId
+        this.cursoId = navigation.extras.state['cursoId']; // Agregar cursoId
     } else {
+        // Respaldo: obtener datos desde sessionStorage si state no está disponible
         this.profesorId = sessionStorage.getItem('profesorId');
         this.asignaturaId = sessionStorage.getItem('asignaturaId');
-        this.cursoId = sessionStorage.getItem('cursoId');
+        this.cursoId = sessionStorage.getItem('cursoId'); // Agregar cursoId
     }
 
-    console.log('Datos en codigoprofe:', {
+    console.log('Datos obtenidos en CodigoprofePage:', {
         profesorId: this.profesorId,
         asignaturaId: this.asignaturaId,
-        cursoId: this.cursoId
+        cursoId: this.cursoId,
     });
-
-    if (!this.cursoId) {
-        console.error('No se encontró el ID del curso.');
-    }
-}
+  }
 
 
 
   generarQR() {
     if (this.profesorId && this.asignaturaId && this.cursoId) {
-        const fechaActual = new Date();
-        const fechaFormateada = fechaActual.toLocaleDateString();
-
-        this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}`;
-
-        const navigationExtras: NavigationExtras = {
-            state: {
-                profesorId: this.profesorId,
-                asignaturaId: this.asignaturaId,
-                qrData: this.qrData
-            }
-        };
-        this.router.navigate(['/qrprofe'], navigationExtras);
-
-        this.firebsv.updateFechaClase(this.cursoId, this.asignaturaId, this.asignaturaId, fechaFormateada)
-            .then(() => {
-                console.log('Clase guardada con éxito');
-            })
-            .catch(error => {
-                console.error('Error al guardar la clase:', error);
-            });
-    } else {
-        console.error('Datos incompletos para generar QR:', {
-            profesorId: this.profesorId,
-            asignaturaId: this.asignaturaId,
-            cursoId: this.cursoId
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toLocaleDateString();
+  
+      this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}`;
+  
+      const navigationExtras: NavigationExtras = {
+        state: {
+          profesorId: this.profesorId,
+          asignaturaId: this.asignaturaId,
+          cursoId: this.cursoId,
+          qrData: this.qrData
+        }
+      };
+  
+      console.log('Navegando a qrprofe con:', navigationExtras.state);
+  
+      this.router.navigate(['/qrprofe'], navigationExtras);
+  
+      this.firebsv.updateFechaClase(this.cursoId, this.asignaturaId, this.asignaturaId, fechaFormateada)
+        .then(() => {
+          console.log('Clase guardada con éxito');
+        })
+        .catch(error => {
+          console.error('Error al guardar la clase:', error);
         });
+    } else {
+      console.error('Datos incompletos para generar QR:', {
+        profesorId: this.profesorId,
+        asignaturaId: this.asignaturaId,
+        cursoId: this.cursoId,
+      });
     }
   }
   al_vistaProfe() {
