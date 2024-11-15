@@ -2,10 +2,7 @@ import { AlertController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FireBaseService } from 'src/app/services/fire-base.service';
-import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
-import { concatMap, of } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+
 @Component({
   selector: 'app-codigoprofe',
   templateUrl: './codigoprofe.page.html',
@@ -17,14 +14,12 @@ export class CodigoprofePage implements OnInit {
   qrData: string = '';
   seccionId: string = '';
   cursoId: string | null = null; 
+  qrGenerado = false; 
 
 
 
   constructor(private router: Router,
-    private alertController: AlertController,
-    private route: ActivatedRoute,
-    private navCtrl: NavController,
-    private firebase: AngularFirestore,
+
     private firebsv: FireBaseService,
 
   ) { }
@@ -32,60 +27,66 @@ export class CodigoprofePage implements OnInit {
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras.state) {
-        this.profesorId = navigation.extras.state['profesorId'];
-        this.asignaturaId = navigation.extras.state['asignaturaId'];
-        this.cursoId = navigation.extras.state['cursoId']; // Agregar cursoId
+      this.profesorId = navigation.extras.state['profesorId'];
+      this.asignaturaId = navigation.extras.state['asignaturaId'];
+      this.cursoId = navigation.extras.state['cursoId'];
     } else {
-        // Respaldo: obtener datos desde sessionStorage si state no está disponible
-        this.profesorId = sessionStorage.getItem('profesorId');
-        this.asignaturaId = sessionStorage.getItem('asignaturaId');
-        this.cursoId = sessionStorage.getItem('cursoId'); // Agregar cursoId
+      this.profesorId = sessionStorage.getItem('profesorId');
+      this.asignaturaId = sessionStorage.getItem('asignaturaId');
+      this.cursoId = sessionStorage.getItem('cursoId');
     }
 
-    console.log('Datos obtenidos en CodigoprofePage:', {
-        profesorId: this.profesorId,
-        asignaturaId: this.asignaturaId,
-        cursoId: this.cursoId,
+    this.qrData = sessionStorage.getItem('qrData') || '';  // Recupera el QR si ya fue generado
+
+    // Si ya existe un QR, activa el flag para habilitar el botón
+    this.qrGenerado = !!this.qrData;
+    console.log('Datos en CodigoprofePage:', {
+      profesorId: this.profesorId,
+      asignaturaId: this.asignaturaId,
+      cursoId: this.cursoId,
+      qrData: this.qrData
     });
   }
-
-
 
   generarQR() {
     if (this.profesorId && this.asignaturaId && this.cursoId) {
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toLocaleDateString();
-  
+
+      // Crear el QR con la fecha y guardar en sessionStorage
       this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}`;
-  
-      const navigationExtras: NavigationExtras = {
-        state: {
-          profesorId: this.profesorId,
-          asignaturaId: this.asignaturaId,
-          cursoId: this.cursoId,
-          qrData: this.qrData
-        }
-      };
-  
-      console.log('Navegando a qrprofe con:', navigationExtras.state);
-  
-      this.router.navigate(['/qrprofe'], navigationExtras);
-  
+      sessionStorage.setItem('qrData', this.qrData);
+      sessionStorage.setItem('profesorId', this.profesorId);
+      sessionStorage.setItem('asignaturaId', this.asignaturaId);
+      sessionStorage.setItem('cursoId', this.cursoId);
+      
+      // Actualiza Firestore con la fecha de la clase
       this.firebsv.updateFechaClase(this.cursoId, this.asignaturaId, this.asignaturaId, fechaFormateada)
         .then(() => {
-          console.log('Clase guardada con éxito');
+          console.log('Fecha de clase guardada en Firestore');
+          this.qrGenerado = true;  // Habilita el botón para ver QR
         })
         .catch(error => {
-          console.error('Error al guardar la clase:', error);
+          console.error('Error al guardar la fecha de clase en Firestore:', error);
         });
     } else {
-      console.error('Datos incompletos para generar QR:', {
+      console.error('Datos incompletos para generar QR');
+    }
+  }
+
+  verQR() {
+    const navigationExtras: NavigationExtras = {
+      state: {
         profesorId: this.profesorId,
         asignaturaId: this.asignaturaId,
         cursoId: this.cursoId,
-      });
-    }
+        qrData: this.qrData
+      }
+    };
+    this.router.navigate(['/qrprofe'], navigationExtras);
   }
+
+
   al_vistaProfe() {
     const navigationExtras: NavigationExtras = {
       state: {
@@ -102,35 +103,4 @@ export class CodigoprofePage implements OnInit {
   a_lista() {
     this.router.navigate(["/lista-pres"]);
   }
-
-  async alerta() {
-    const alert = await this.alertController.create({
-      header: 'Advertencia',
-      message: 'Se Generará un Código, ¿Desea continuar?',
-      backdropDismiss: false,
-      buttons: [
-        {
-          text: 'Cancelar',
-          handler: () => {
-            this.router.navigate(['/codigoprofe']);
-          },
-        },
-        {
-          text: 'Continuar',
-          handler: () => {
-            const navigationExtras: NavigationExtras = {
-              state: {
-                profesorId: this.profesorId,
-                asignaturaId: this.asignaturaId,
-              },
-            };
-            this.router.navigate(['/qrprofe'], navigationExtras);
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
 }
-

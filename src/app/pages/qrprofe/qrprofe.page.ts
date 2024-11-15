@@ -42,26 +42,7 @@ export class QRProfePage implements OnInit {
     }
   }
 
-  al_codigo(asignaturaId: string) {
-    const profesorId = this.route.snapshot.queryParamMap.get('profesorId');
-    if (profesorId) {
-      console.log('Navegando a codigoprofe con:', { profesorId, asignaturaId });
-  
-      // Guardar en sessionStorage como respaldo
-      sessionStorage.setItem('profesorId', profesorId);
-      sessionStorage.setItem('asignaturaId', asignaturaId);
-  
-      const navigationExtras: NavigationExtras = {
-        state: {
-          profesorId: profesorId,
-          asignaturaId: asignaturaId
-        }
-      };
-      this.router.navigate(['/codigoprofe'], navigationExtras);
-    } else {
-      console.error('No se encontró el ID del profesor');
-    }
-  }
+
 
   al_vistaProfe() {
     if (this.profesorId) {
