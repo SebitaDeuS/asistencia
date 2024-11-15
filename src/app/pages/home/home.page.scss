@@ -9,7 +9,6 @@ ion-content {
   text-align: center;
 }
 .contenedor-titulo {
-  margin-bottom: 30px;
   display: flex; 
   justify-content: center; 
   align-items: center; 
@@ -30,4 +29,8 @@ ion-content {
   width: 100%; 
   padding: 0 20px; 
 
+}
+#tarjeta{
+  border-radius: 10px;
+  border: 1px solid dodgerblue;
 }

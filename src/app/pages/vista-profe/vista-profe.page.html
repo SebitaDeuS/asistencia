@@ -33,7 +33,7 @@
               <h2>{{ asignatura.nombre }}</h2> 
               <p>Sección: {{ asignatura.id }}</p> 
             </ion-label>
-            <ion-button fill="clear" shape="round" (click)="al_codigo(asignatura.id)">
+            <ion-button fill="clear" shape="round" (click)="al_codigo(asignatura.id, asignatura.cursoId)">
               Abrir
             </ion-button>
           </ion-item>
