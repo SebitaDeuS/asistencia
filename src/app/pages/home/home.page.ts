@@ -35,6 +35,7 @@ export class HomePage implements OnInit {
 
   escanearQr() {
     if (this.studentData) {
+    console.log('llendo a vista_qr')
       // Navegar a VistaQrPage con los datos del alumno
       this.navCtrl.navigateForward('/vista-qr', {
         state: { student: this.studentData }
