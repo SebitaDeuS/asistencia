@@ -36,23 +36,20 @@ export class VistaProfePage implements OnInit {
     console.log('Asignaturas en vista-profe:', this.asignaturas);
   }
 
-  al_codigo(asignaturaId: string) {
+  al_codigo(asignaturaId: string, cursoId: string) {
     if (this.profesorId) {
-      console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId });
-      
-      // Guarda en sessionStorage como respaldo
-      sessionStorage.setItem('profesorId', this.profesorId);
-      sessionStorage.setItem('asignaturaId', asignaturaId);
-  
-      const navigationExtras: NavigationExtras = {
-        state: {
-          profesorId: this.profesorId,
-          asignaturaId: asignaturaId
-        }
-      };
-      this.router.navigate(['/codigoprofe'], navigationExtras);
+        console.log('Navegando a codigoprofe con:', { profesorId: this.profesorId, asignaturaId, cursoId });
+        
+        const navigationExtras: NavigationExtras = {
+            state: {
+                profesorId: this.profesorId,
+                asignaturaId: asignaturaId,
+                cursoId: cursoId  // Incluimos el cursoId
+            }
+        };
+        this.router.navigate(['/codigoprofe'], navigationExtras);
     } else {
-      console.error('No se encontró el ID del profesor');
+        console.error('No se encontró el ID del profesor');
     }
-  }
+}
 }

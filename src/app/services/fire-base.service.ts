@@ -36,93 +36,78 @@ export class FireBaseService {
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(
       concatMap(cursos => {
-        // Filtra solo los cursos con nombre definido
         const cursosFiltrados = cursos.filter(curso => {
           const cursoData = curso.payload.doc.data() as { nombre?: string };
-          return cursoData.nombre; // Solo pasa si 'nombre' está definido
+          return cursoData.nombre;
         });
-
+  
         return combineLatest(
           cursosFiltrados.map(curso => {
             const cursoData = curso.payload.doc.data() as { nombre: string };
             const cursoId = curso.payload.doc.id;
-
+  
             return this.firestore.collection(`cursos/${cursoId}/secciones`, ref =>
               ref.where('profesor.id_profesor', '==', idProfesor)
             ).snapshotChanges().pipe(
               map(secciones => secciones.map(seccion => ({
                 id: seccion.payload.doc.id,
-                nombre: cursoData.nombre,  // Incluye el nombre del curso
-                ...(seccion.payload.doc.data() as object)  // Asegura que los datos sean un objeto
+                cursoId,  // Agregar el ID del curso aquí
+                nombre: cursoData.nombre,
+                ...(seccion.payload.doc.data() as object)
               })))
             );
           })
         );
       }),
-      map(cursos => cursos.reduce((acc, val) => acc.concat(val), []))  // Aplana el array de arrays
+      map(cursos => cursos.reduce((acc, val) => acc.concat(val), []))
     );
   }
   async updateFechaClase(cursoId: string, asignaturaId: string, seccionId: string, fecha: string) {
-    try {
-      // Obtener la referencia a la sección específica
-      const seccionRef = this.firestore
-        .collection('cursos')
-        .doc(asignaturaId)  // Accede a la asignatura
-        .collection('secciones')
-        .doc(seccionId);    // Accede a la sección específica
-  
-      // Obtener el documento de la sección
-      const seccionSnapshot = await seccionRef.get().toPromise();
-  
-      if (seccionSnapshot.exists) {
-        const data = seccionSnapshot.data();
-  
-        // Verificar si el array 'Clases' existe
-        if (data && data['Clases']) {
-          // Si el array Clases está vacío, creamos una nueva clase
-          if (data['Clases'].length === 0) {
-            const nuevaClase = {
-              fecha_clase: fecha,
-              alumnos: []  // Puedes añadir los alumnos aquí si es necesario
-            };
-            await seccionRef.update({
-              'Clases': [nuevaClase]  // Añadimos la nueva clase al array Clases
-            });
-          } else {
-            // Si ya existe al menos una clase, actualizamos la fecha de la primera
-            const clase = data['Clases'][0]; // Aquí accedemos con notación de corchetes
-            clase.fecha_clase = fecha;
-  
-            // Actualizamos el documento con el array modificado
-            await seccionRef.update({
-              'Clases': data['Clases']  // Actualizamos el array completo de Clases
-            });
-          }
-        } else {
-          console.error('No se encontró el array Clases');
-        }
-      } else {
-        console.log('Sección no encontrada. Creando nueva sección...');
-        // Si no existe la sección, crearla con una nueva clase
-        const nuevaSeccion = {
-          profesor: {
-            id_profesor: 'some-profesor-id',  // Aquí debes agregar el ID del profesor
-            nombre_profesor: 'Profesor Nombre'  // Aquí debes agregar el nombre del profesor
-          },
-          Clases: [
-            {
-              fecha_clase: fecha,
-              alumnos: []  // Puedes añadir los alumnos aquí si es necesario
-            }
-          ]
-        };
-        await seccionRef.set(nuevaSeccion);  // Crea la sección con la clase
-        console.log('Sección y clase creadas con éxito');
-      }
-    } catch (error) {
-      console.error('Error al actualizar la fecha de clase:', error);
+    if (!cursoId || !asignaturaId || !seccionId) {
+        console.error('Parámetros incompletos:', { cursoId, asignaturaId, seccionId });
+        throw new Error('Parámetros incompletos: alguno de los IDs está vacío.');
     }
-  }
+
+    try {
+        const seccionRef = this.firestore
+            .collection('cursos')
+            .doc(cursoId)
+            .collection('secciones')
+            .doc(seccionId);
+
+        const seccionSnapshot = await seccionRef.get().toPromise();
+
+        if (seccionSnapshot.exists) {
+            const data = seccionSnapshot.data();
+
+            if (data && data['Clases']) {
+                if (data['Clases'].length === 0) {
+                    const nuevaClase = {
+                        fecha_clase: fecha,
+                        alumnos: []
+                    };
+                    await seccionRef.update({ 'Clases': [nuevaClase] });
+                } else {
+                    const clase = data['Clases'][0];
+                    clase.fecha_clase = fecha;
+                    await seccionRef.update({ 'Clases': data['Clases'] });
+                }
+            } else {
+                console.error('No se encontró el array Clases');
+            }
+        } else {
+            console.log('Sección no encontrada. Creando nueva sección...');
+            const nuevaSeccion = {
+                profesor: { id_profesor: 'some-profesor-id', nombre_profesor: 'Profesor Nombre' },
+                Clases: [{ fecha_clase: fecha, alumnos: [] }]
+            };
+            await seccionRef.set(nuevaSeccion);
+            console.log('Sección y clase creadas con éxito');
+        }
+    } catch (error) {
+        console.error('Error al actualizar la fecha de clase:', error);
+    }
+}
   
   // Método para establecer la ID de la asignatura
   setAsignaturaId(id: string) {
