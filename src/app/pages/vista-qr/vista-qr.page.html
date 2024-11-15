@@ -24,7 +24,7 @@
       <ion-card-content class="tarjeta_content">
         <ion-card-subtitle>Acerca el Celular a tu QR</ion-card-subtitle> 
         <img class="logo" src="assets/img/scaner.png" alt="">
-        <ion-button color="tertiary" class="">
+        <ion-button color="tertiary" (click)="scan()" [disabled]="!isSupported">
           Escanear
         </ion-button>
         <br>
