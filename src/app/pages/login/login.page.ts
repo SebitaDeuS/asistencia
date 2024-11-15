@@ -2,6 +2,7 @@ import { FireBaseService } from './../../services/fire-base.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { take } from 'rxjs';
 import { UsuarioLog } from 'src/app/interfaces/i_usuario';
 import { User } from 'src/app/models/user.model';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -53,8 +54,10 @@ export class LoginPage implements OnInit {
         const profesorId = result.user?.uid;
         if (profesorId) {
           // Obtén las asignaturas del profesor
-          this.firebaseSvc.getAsignaturasProfesor(profesorId).subscribe((asignaturas) => {
-            console.log('Asignaturas del profesor:', asignaturas);
+          this.firebaseSvc.getAsignaturasProfesor(profesorId)
+              .pipe(take(1)) 
+              .subscribe((asignaturas) => {
+                console.log('Asignaturas del profesor:', asignaturas);
   
             // Guarda en sessionStorage como respaldo
             sessionStorage.setItem('profesorId', profesorId);

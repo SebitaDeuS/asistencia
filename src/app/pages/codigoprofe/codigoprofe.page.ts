@@ -1,5 +1,5 @@
 import { AlertController } from '@ionic/angular';
-import { NavigationExtras, Router } from '@angular/router';
+import { NavigationExtras, NavigationStart, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FireBaseService } from 'src/app/services/fire-base.service';
 
@@ -22,7 +22,14 @@ export class CodigoprofePage implements OnInit {
 
     private firebsv: FireBaseService,
 
-  ) { }
+  ) { 
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        console.log('Navegación detectada desde Codigoprofe:', event.url);
+        console.trace();
+      }
+    });
+  }
 
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
@@ -36,41 +43,32 @@ export class CodigoprofePage implements OnInit {
       this.cursoId = sessionStorage.getItem('cursoId');
     }
 
-    this.qrData = sessionStorage.getItem('qrData') || '';  // Recupera el QR si ya fue generado
-
-    // Si ya existe un QR, activa el flag para habilitar el botón
+    // Recuperar QR si ya fue generado anteriormente
+    this.qrData = sessionStorage.getItem('qrData') || '';  
     this.qrGenerado = !!this.qrData;
-    console.log('Datos en CodigoprofePage:', {
-      profesorId: this.profesorId,
-      asignaturaId: this.asignaturaId,
-      cursoId: this.cursoId,
-      qrData: this.qrData
-    });
   }
 
   generarQR() {
     if (this.profesorId && this.asignaturaId && this.cursoId) {
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toLocaleDateString();
-
-      // Crear el QR con la fecha y guardar en sessionStorage
+  
       this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}`;
       sessionStorage.setItem('qrData', this.qrData);
-      sessionStorage.setItem('profesorId', this.profesorId);
-      sessionStorage.setItem('asignaturaId', this.asignaturaId);
-      sessionStorage.setItem('cursoId', this.cursoId);
-      
-      // Actualiza Firestore con la fecha de la clase
+      this.qrGenerado = true;
+  
+      console.log('QR generado correctamente:', this.qrData);
+  
+      // Actualiza la fecha en Firestore
       this.firebsv.updateFechaClase(this.cursoId, this.asignaturaId, this.asignaturaId, fechaFormateada)
-        .then(() => {
-          console.log('Fecha de clase guardada en Firestore');
-          this.qrGenerado = true;  // Habilita el botón para ver QR
-        })
-        .catch(error => {
-          console.error('Error al guardar la fecha de clase en Firestore:', error);
-        });
+        .then(() => console.log('Fecha actualizada correctamente en Firestore'))
+        .catch((error) => console.error('Error al actualizar la fecha:', error));
     } else {
-      console.error('Datos incompletos para generar QR');
+      console.error('Faltan datos para generar el QR:', {
+        profesorId: this.profesorId,
+        asignaturaId: this.asignaturaId,
+        cursoId: this.cursoId,
+      });
     }
   }
 
