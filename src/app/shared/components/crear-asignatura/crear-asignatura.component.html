@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crear Asignatura</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Nombre de la Asignatura</ion-label>
+    <ion-input [(ngModel)]="nombreAsignatura"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Nombre de la Sección</ion-label>
+    <ion-input [(ngModel)]="nombreSeccion"></ion-input>
+  </ion-item>
+
+  <ion-footer>
+    <ion-button expand="block" (click)="crearAsignatura()">Crear Asignatura</ion-button>
+  </ion-footer>
+</ion-content>

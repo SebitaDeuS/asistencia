@@ -9,6 +9,9 @@
     <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
   </div>
   <div class="cuerpo">
+    <ion-buttons slot="start" >
+      <ion-button (click)="crearAsignatura()" style="background-color: blue; border-radius: 5px; color: white; margin-top: 30px;">Crear Asignatura</ion-button>
+    </ion-buttons>
     <ion-text color="primary" class="ion-text-center"><h1>Lista de Clases</h1></ion-text>
 
     <ion-list [inset]="true" lines="full" mode="ios">

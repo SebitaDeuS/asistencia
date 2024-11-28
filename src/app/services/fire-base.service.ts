@@ -5,7 +5,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
 import { catchError, Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';  // Necesario para un almacenamiento reactivo
-
+import { Network } from '@capacitor/network';
 import { mergeMap, combineLatest, map, concatMap, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class FireBaseService {
   signIn(user: User) {
     return signInWithEmailAndPassword(getAuth(), user.email, user.password);
   }
-  // Método para obtener el ID del usuario autenticado
+
   getProfesorId(): Observable<string | null> {
     return this.auth.authState.pipe(map(user => user ? user.uid : null));
   }
@@ -35,33 +35,89 @@ export class FireBaseService {
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(
-        concatMap(cursos => {
-            const cursosFiltrados = cursos.filter(curso => {
-                const cursoData = curso.payload.doc.data() as { nombre?: string };
-                return cursoData.nombre; // Solo pasa si 'nombre' está definido
-            });
-
-            return combineLatest(
-                cursosFiltrados.map(curso => {
-                    const cursoData = curso.payload.doc.data() as { nombre: string };
-                    const cursoId = curso.payload.doc.id;
-
-                    return this.firestore.collection(`cursos/${cursoId}/secciones`, ref =>
-                        ref.where('profesor.id_profesor', '==', idProfesor)
-                    ).snapshotChanges().pipe(
-                        map(secciones => secciones.map(seccion => ({
-                            cursoId: cursoId, // Incluye el cursoId
-                            id: seccion.payload.doc.id,
-                            nombre: cursoData.nombre, // Incluye el nombre del curso
-                            ...(seccion.payload.doc.data() as object) // Asegura que los datos sean un objeto
-                        })))
-                    );
-                })
+      concatMap((cursos) => {
+        const cursosFiltrados = cursos.filter((curso) => {
+          const cursoData = curso.payload.doc.data() as { nombre?: string };
+          return cursoData.nombre; 
+        });
+  
+        return combineLatest(
+          cursosFiltrados.map((curso) => {
+            const cursoData = curso.payload.doc.data() as { nombre: string };
+            const cursoId = curso.payload.doc.id;
+  
+            return this.firestore.collection(`cursos/${cursoId}/secciones`, (ref) =>
+              ref.where('profesor.id_profesor', '==', idProfesor)
+            ).snapshotChanges().pipe(
+              map((secciones) =>
+                secciones.map((seccion) => ({
+                  cursoId: cursoId,
+                  id: seccion.payload.doc.id, 
+                  nombre: cursoData.nombre, 
+                  ...(seccion.payload.doc.data() as object), 
+                }))
+              )
             );
-        }),
-        map(cursos => cursos.reduce((acc, val) => acc.concat(val), [])) // Aplana el array de arrays
+          })
+        );
+      }),
+      map((cursos) => cursos.reduce((acc, val) => acc.concat(val), [])) 
     );
-}
+  }
+  
+
+   async guardarAsignaturaEnFirebase(asignatura: any) {
+    try {
+      const cursoRef = this.firestore.collection('cursos').doc(asignatura.cursoId);
+      await cursoRef.set({ nombre: asignatura.nombre });
+  
+      const seccionRef = cursoRef.collection('secciones').doc(asignatura.seccionId);
+      await seccionRef.set({
+        profesor: {
+          id_profesor: asignatura.profesorId,
+          nombre_profesor: asignatura.profesorNombre,
+        },
+        alumnos: [],
+      });
+  
+      const clasesRef = seccionRef.collection('Clases').doc('plantilla');
+      await clasesRef.set({ alumnos: [] });
+  
+      console.log(`Asignatura "${asignatura.nombre}" guardada en Firebase.`);
+    } catch (error) {
+      console.error('Error al guardar asignatura en Firebase:', error);
+      throw error;
+    }
+  }
+
+  // Guardar asignatura localmente
+  guardarAsignaturaPendiente(asignatura: any): void {
+    const asignaturasPendientes = JSON.parse(localStorage.getItem('asignaturasPendientes') || '[]');
+    asignaturasPendientes.push(asignatura);
+    localStorage.setItem('asignaturasPendientes', JSON.stringify(asignaturasPendientes));
+    console.log('Asignatura guardada localmente:', asignatura);
+  }
+
+  // Sincronizar asignaturas pendientes
+  async sincronizarAsignaturasPendientes(): Promise<void> {
+    const status = await Network.getStatus();
+
+    if (status.connected) {
+      const asignaturasPendientes = JSON.parse(localStorage.getItem('asignaturasPendientes') || '[]');
+
+      for (const asignatura of asignaturasPendientes) {
+        await this.guardarAsignaturaEnFirebase(asignatura);
+        console.log(`Asignatura "${asignatura.nombre}" sincronizada con Firebase.`);
+      }
+
+      // Limpiar asignaturas pendientes
+      localStorage.removeItem('asignaturasPendientes');
+    } else {
+      console.log('Sin conexión a Internet. No se pueden sincronizar asignaturas.');
+    }
+  }
+
+
   async updateFechaClase(cursoId: string, asignaturaId: string, seccionId: string, fecha: string) {
     if (!cursoId || !asignaturaId || !seccionId) {
         console.error('Parámetros incompletos:', { cursoId, asignaturaId, seccionId });
