@@ -9,11 +9,11 @@
     <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
   </div>
   <div class="cuerpo">
-    <ion-buttons slot="start" >
-      <ion-button (click)="crearAsignatura()" style="background-color: blue; border-radius: 5px; color: white; margin-top: 30px;">Crear Asignatura</ion-button>
-    </ion-buttons>
+    
     <ion-text color="primary" class="ion-text-center"><h1>Lista de Clases</h1></ion-text>
-
+    <ion-buttons slot="start" >
+      <ion-button (click)="crearAsignatura()" style=" margin-left:100px; background-color: rgb(18, 79, 125); border-radius: 5px; color: white; margin-top: 30px;">Crear Asignatura</ion-button>
+    </ion-buttons>
     <ion-list [inset]="true" lines="full" mode="ios">
       <ion-list-header mode="ios" color="primary">
         <ion-label>Componentes</ion-label>
@@ -44,6 +44,7 @@
       </ng-template>
     </ion-list>
   </div>
+  
 </ion-content>
 
 <ion-footer>
