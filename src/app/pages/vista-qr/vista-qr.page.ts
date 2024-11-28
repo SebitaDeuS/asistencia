@@ -29,7 +29,7 @@ export class VistaQrPage implements OnInit {
       //para el escanaer===========
 
     });
-    // Obtener los datos del alumno de la navegación
+    
     const navigationState = history.state;
     if (navigationState && navigationState.student) {
       this.studentData = navigationState.student;
@@ -39,6 +39,46 @@ export class VistaQrPage implements OnInit {
     }
   }
 
+  async ErrorPresente(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: message,
+      buttons: ['Entiendo']
+    });
+    await alert.present();
+  }
+
+  async SuccesAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Asistencia registrada',
+      message: 'Ya estas Presente',
+      buttons: ['Entiendo'],
+    });
+
+    await alert.present();
+  }
+
+  async alerta(messege:string){
+    const alert =await this.alertController.create({
+      header:'Aviso',
+      message:messege,
+      buttons:['Entiendo']
+    });
+    await alert.present()
+  }
+  async presentAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Permiso denegado',
+      message: 'Para usar la aplicación, autoriza los permisos de cámara.',
+      buttons: ['OK'],
+    });
+  
+    await alert.present();
+  }
+  async requestPermissions(): Promise<boolean> {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    return camera === 'granted' || camera === 'limited';
+  }
   async scan(): Promise<void> {
     console.log('Iniciando escaneo...');
     const granted = await this.requestPermissions();
@@ -49,57 +89,92 @@ export class VistaQrPage implements OnInit {
     }
   
     const { barcodes } = await BarcodeScanner.scan();
-    console.log('Códigos escaneados:', barcodes);
-    if (barcodes.length > 0) {
-      // Decodificar el QR y extraer los datos
-      const qrData = new URLSearchParams(barcodes[0].displayValue);
-      console.log('Datos del QR:', qrData);
-      const profesorId = qrData.get('profesorId');
-      const asignaturaId = qrData.get('asignaturaId');
-      const fecha = qrData.get('fecha');
-      const hora = qrData.get('hora');
-  
-      // Verificar que todos los datos requeridos estén presentes
-      if (profesorId && asignaturaId && fecha && this.studentData) {
-        console.log('Datos completos, guardando en Firestore...');
-        // Crear la referencia al documento de la clase específica utilizando la colección de Firestore
-        const claseRef = this.firestore.collection('cursos').doc('PaG0r6gLTVMJ0WVtLGHo')
-                                        .collection('secciones').doc(asignaturaId)
-                                        .collection('Clases').doc(fecha);
-  
-        // Preparar los datos del alumno con estado `true`
-        const alumnoData = {
-          id_alumno: this.studentData.id_alumno,
-          nombre_alumno: this.studentData.nombre_alumno,
-          estado: true,  // Marcado como presente
-          hora,
-        };
-  
-        // Actualizar el array de alumnos en la clase correspondiente
-        await claseRef.update({
-          alumnos: arrayUnion(alumnoData)
-        });
-  
-        console.log('Datos del alumno guardados en Firestore con estado presente.');
-      } else {
-        console.error('Información incompleta en el QR o datos del alumno no disponibles');
+  if (barcodes.length > 0) {
+    const qrData = barcodes[0].displayValue; 
+    console.log('Datos del QR:', qrData);
+
+    const dataMap = qrData.split(' ').reduce((acc, pair) => {
+      const [key, value] = pair.split('=');
+      if (key && value) {
+        acc[key] = value;
       }
+      return acc;
+    }, {} as Record<string, string>);
+
+    const profesorId = dataMap['profesorId'];
+    const asignaturaId = dataMap['asignaturaId'];
+    const fecha = dataMap['fecha'];
+    const cursoId = dataMap['cursoId'];
+
+    await this.showQRDataAlert(dataMap);
+
+    if (profesorId && asignaturaId && fecha && cursoId && this.studentData) {
+      const claseRef = this.firestore.collection('cursos').doc(cursoId)
+                                     .collection('secciones').doc(asignaturaId)
+                                     .collection('Clases').doc(fecha);
+
+      const alumnoData = {
+        id_alumno: this.studentData.id_alumno,
+        nombre_alumno: this.studentData.nombre_alumno,
+        estado: true,
+      };
+
+      try {
+        await claseRef.update({
+          alumnos: arrayUnion(alumnoData),
+        });
+
+        await this.SuccesAlert();
+        console.log('Datos del alumno guardados en Firestore con estado presente.');
+      } catch (error) {
+        console.error('Error al registrar al alumno en Firestore:', error);
+        if (error.code === 'not-found') {
+          await claseRef.set({ alumnos: [alumnoData] });
+          console.log('Documento creado y alumno registrado.');
+        } else {
+          await this.ErrorPresente('Error al registrar el alumno');
+        }
+      }
+    } else {
+      await this.ErrorPresente('Información incompleta en el QR o datos del alumno no disponibles');
+      console.error('Datos faltantes:', {
+        profesorId,
+        asignaturaId,
+        fecha,
+        cursoId,
+        studentData: this.studentData,
+      });
     }
+  } else {
+    console.log('No se escanearon códigos.');
   }
+}
 
-  async requestPermissions(): Promise<boolean> {
-    const { camera } = await BarcodeScanner.requestPermissions();
-    return camera === 'granted' || camera === 'limited';
-  }
+// Método adicional para mostrar los datos procesados en una alerta
+async showQRDataAlert(data: Record<string, string>): Promise<void> {
+  const alert = await this.alertController.create({
+    header: 'Datos del QR',
+    message: `Profesor ID: ${data['profesorId']}<br>
+              Asignatura ID: ${data['asignaturaId']}<br>
+              Fecha: ${data['fecha']}<br>
+              Curso ID: ${data['cursoId']}`,
+    buttons: ['OK'],
+  });
 
-  async presentAlert(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Permiso denegado',
-      message: 'Para usar la aplicación autorizar los permisos de cámara',
-      buttons: ['OK'],
-    });
-    await alert.present();
-  }
+  await alert.present();
+}
+async showQRdato(data: Record<string, string>): Promise<void> {
+  const alert = await this.alertController.create({
+    header: 'Datos del QR',
+    message: `Profesor ID: ${data['profesorId']}<br>
+              Asignatura ID: ${data['asignaturaId']}<br>
+              Fecha: ${data['fecha']}<br>
+              Curso ID: ${data['cursoid']}`,
+    buttons: ['OK'],
+  });
+
+  await alert.present();
+}
 
   volver_al_home() {
     this.navCtrl.back();

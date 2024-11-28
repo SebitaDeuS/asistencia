@@ -43,7 +43,7 @@ export class CodigoprofePage implements OnInit {
       this.cursoId = sessionStorage.getItem('cursoId');
     }
 
-    // Recuperar QR si ya fue generado anteriormente
+    // Recuperar QR 
     this.qrData = sessionStorage.getItem('qrData') || '';  
     this.qrGenerado = !!this.qrData;
   }
@@ -53,7 +53,7 @@ export class CodigoprofePage implements OnInit {
       const fechaActual = new Date();
       const fechaFormateada = fechaActual.toLocaleDateString();
   
-      this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}`;
+      this.qrData = `profesorId=${this.profesorId} asignaturaId=${this.asignaturaId} cursoid=${this.cursoId} fecha=${fechaFormateada} `;
       sessionStorage.setItem('qrData', this.qrData);
       this.qrGenerado = true;
   

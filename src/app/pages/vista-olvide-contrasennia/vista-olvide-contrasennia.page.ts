@@ -38,9 +38,7 @@ export class VistaOlvideContrasenniaPage implements OnInit {
 
 
   enviarRecuperacion() {
-    // Lógica para enviar el correo de recuperación
     console.log('Correo para recuperar contraseña:', this.email);
-    // Aquí podrías implementar la lógica para enviar el correo de recuperación
   }
 
   

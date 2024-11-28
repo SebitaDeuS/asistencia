@@ -8,4 +8,7 @@ export interface StudentData {
     id_alumno: string;
     nombre_alumno: string
   }
-  
+
+  export interface Clase {
+    alumnos: { id_alumno: string, nombre_alumno: string, estado: boolean }[];
+  }
