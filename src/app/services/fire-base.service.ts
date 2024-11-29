@@ -5,7 +5,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
 import { catchError, Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';  // Necesario para un almacenamiento reactivo
-import{Clase} from '../interfaces/i_usuario'
+import{Clase,Alumno} from '../interfaces/i_usuario'
 import { mergeMap, combineLatest, map, concatMap, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
@@ -30,68 +30,30 @@ export class FireBaseService {
     return this.auth.authState.pipe(map(user => user ? user.uid : null));
   }
 
-  getAsignaturasEstudiante(idEstudiante: string): Observable<any[]> {
-    return this.firestore.collection('cursos').snapshotChanges().pipe(
-      concatMap(cursos => {
-        // Filtrar cursos que tienen al menos una sección con el alumno
-        const cursosFiltrados = cursos.filter(curso => {
-          const cursoData = curso.payload.doc.data() as { nombre?: string };
-          return cursoData.nombre; // Solo pasa si 'nombre' está definido
-        });
-  
-        return combineLatest(
-          cursosFiltrados.map(curso => {
-            const cursoData = curso.payload.doc.data() as { nombre: string };
-            const cursoId = curso.payload.doc.id;
-  
-            // Obtener las secciones de cada curso y filtrar por el alumno
-            return this.firestore.collection(`cursos/${cursoId}/secciones`).snapshotChanges().pipe(
-              concatMap(secciones => {
-                return combineLatest(
-                  secciones.map(seccion => {
-                    const seccionData = seccion.payload.doc.data() as { alumnos?: any[] };
-                    const seccionId = seccion.payload.doc.id;
-                    console.log('Sección ID:', seccionId, 'Datos de alumnos:', seccionData.alumnos);
-                    if (!Array.isArray(seccionData.alumnos)) {
-                      console.warn(`'alumnos' no es un array en la sección ${seccionId}. Tipo actual:`, typeof seccionData.alumnos);
-                    }
-                  
-                    // Verificar si 'alumnos' es un array
-                    if (Array.isArray(seccionData.alumnos)) {
-                      // Filtrar las clases donde el alumno está presente
-                      const clases = seccionData.alumnos.filter(alumno => alumno.id_alumno === idEstudiante);
-  
-                      // Si el alumno está en alguna clase, devolver esa asignatura
-                      if (clases.length > 0) {
-                        return this.firestore.collection(`cursos/${cursoId}/secciones/${seccionId}/Clases`).snapshotChanges().pipe(
-                          map(clases => clases.map(clase => {
-                            const claseData = clase.payload.doc.data() as Clase; // Aseguramos que los datos son del tipo 'Clase'
-                            return {
-                              cursoId: cursoId, // ID del curso
-                              nombre: cursoData.nombre, // Nombre del curso
-                              seccionId: seccionId, // ID de la sección
-                              claseId: clase.payload.doc.id, // ID de la clase
-                              fecha: clase.payload.doc.id, // La fecha es el ID de la clase
-                              alumnos: claseData.alumnos, // Información de los alumnos presentes
-                            };
-                          }))
-                        );
-                      }
-                    }
-  
-                    // Si 'alumnos' no es un array o no hay clases, devolver un array vacío
-                    return [];
-                  })
-                );
-              }),
-              map(asignaturas => asignaturas.reduce((acc, val) => acc.concat(val), [])) // Aplana el array de arrays
-            );
-          })
-        );
-      }),
-      map(asignaturas => asignaturas.reduce((acc, val) => acc.concat(val), [])) // Aplana el array de asignaturas
-    );
+  getAsistenciasEstudiante(studentId: string): Observable<any[]> {
+    return this.firestore
+      .collectionGroup('Clases', ref => 
+        ref.where('alumnos', 'array-contains', { id_alumno: studentId })
+      )
+      .snapshotChanges()
+      .pipe(
+        map(actions => {
+          console.log('Snapshot actions:', actions);  // Para ver todos los detalles
+          return actions.map(action => {
+            const data = action.payload.doc.data() as Clase;  // Aquí tipamos los datos como 'Clase'
+            const alumno = data.alumnos.find((a: any) => a.id_alumno === studentId);  // Tipado de alumnos
+            return {
+              fecha: data.fecha,
+              estado: alumno?.estado ? 'Presente' : 'Ausente',
+              asignatura: data.nombreAsignatura || 'Sin asignatura',
+            };
+          });
+        })
+      );
   }
+
+  
+  
   
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {

@@ -112,7 +112,7 @@ export class VistaQrPage implements OnInit {
       const claseRef = this.firestore.collection('cursos').doc(cursoId)
                                      .collection('secciones').doc(asignaturaId)
                                      .collection('Clases').doc(fecha);
-
+         
       const alumnoData = {
         id_alumno: this.studentData.id_alumno,
         nombre_alumno: this.studentData.nombre_alumno,

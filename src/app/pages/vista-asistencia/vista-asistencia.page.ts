@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, Navigation } from '@angular/router';
-import { Firestore, collection, collectionData, query, where } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Router } from '@angular/router';
 import { FireBaseService } from 'src/app/services/fire-base.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-vista-asistencia',
   templateUrl: './vista-asistencia.page.html',
@@ -11,14 +11,13 @@ import { FireBaseService } from 'src/app/services/fire-base.service';
 })
 export class VistaAsistenciaPage implements OnInit {
   studentId: string;
-  studentData: any = {};
-  asignaturas$: Observable<any[]>; 
+  asignaturas: any[] = []; // Para almacenar las asignaturas y sus clases
 
   constructor(
     private router: Router,
-    private firestore: AngularFirestore,  // Usar AngularFirestore de compatibilidad
-    private firestoreService:FireBaseService
+    private firestoreService: FireBaseService
   ) {
+    // Obtener el estado de navegación para recibir datos del estudiante
     const navigationState = history.state;
     if (navigationState && navigationState.student) {
       this.studentId = navigationState.student; 
@@ -30,17 +29,22 @@ export class VistaAsistenciaPage implements OnInit {
 
   ngOnInit() {
     if (this.studentId) {
-      console.log('Datos del estudiante en VistaAsistencia del ngoninit:', this.studentId);
-      this.getAsignaturasEstudiante(this.studentId);
+      console.log('Datos del estudiante en VistaAsistencia del ngOnInit:', this.studentId);
+  
+      // Llamar al servicio para obtener las asignaturas y clases del estudiante
+      this.firestoreService.getAsistenciasEstudiante(this.studentId).subscribe(
+        asignaturas => {
+          // Asegurarse de que el formato de asignaturas contiene 'asistencias'
+          console.log('Asignaturas y clases recuperadas:', asignaturas); 
+          this.asignaturas = asignaturas; // Almacenar los datos obtenidos
+        },
+        error => {
+          console.error('Error al obtener las asignaturas:', error); // Manejo de errores
+        }
+      );
     } else {
-      console.log('No se recibieron datos de estudiante del ngoninit');
+      console.log('No se recibieron datos de estudiante en el ngOnInit');
     }
-  }
-  getAsignaturasEstudiante(id_alumno: string): void {
-    this.asignaturas$ = this.firestoreService.getAsignaturasEstudiante(id_alumno); // Llama al servicio
-    this.asignaturas$.subscribe(data => {
-      console.log('Asignaturas recuperadas:', data); // Verifica los datos recibidos
-    });
   }
   
 }
