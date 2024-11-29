@@ -36,7 +36,6 @@ export class HomePage implements OnInit {
   escanearQr() {
     if (this.studentData) {
     console.log('llendo a vista_qr')
-      // Navegar a VistaQrPage con los datos del alumno
       this.navCtrl.navigateForward('/vista-qr', {
         state: { student: this.studentData }
       });
@@ -44,12 +43,16 @@ export class HomePage implements OnInit {
   }
 
   asistencia() {
-    // Navegar a la página de asistencia
-    this.router.navigate(['/vista-asistencia']); 
+    if (this.studentData) {
+      console.log('llendo a vista_asistencia');
+      this.navCtrl.navigateForward('/vista-asistencia', {
+        state: { student: this.studentData.id_alumno }
+      });
+      console.log('datos del alumno mandados', this.studentData.id_alumno);
+    }
   }
 
   profe() {
-    // Navegar a la página de asistencia
     this.router.navigate(['/vista-profe']); 
   }
 

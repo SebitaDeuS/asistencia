@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
 import { catchError, Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';  // Necesario para un almacenamiento reactivo
+import{Clase,Alumno} from '../interfaces/i_usuario';
 import { Network } from '@capacitor/network';
 import { mergeMap, combineLatest, map, concatMap, of } from 'rxjs';
 @Injectable({
@@ -12,7 +13,6 @@ import { mergeMap, combineLatest, map, concatMap, of } from 'rxjs';
 })
 
 export class FireBaseService {
-
 
   private asignaturaIdSubject = new BehaviorSubject<string | null>(null);  // Esto guardará la ID de la asignatura
   asignaturaId$ = this.asignaturaIdSubject.asObservable();  // Un observable para observar los cambios en la ID
@@ -31,7 +31,31 @@ export class FireBaseService {
     return this.auth.authState.pipe(map(user => user ? user.uid : null));
   }
 
+  getAsistenciasEstudiante(studentId: string): Observable<any[]> {
+    return this.firestore
+      .collectionGroup('Clases', ref => 
+        ref.where('alumnos', 'array-contains', { id_alumno: studentId })
+      )
+      .snapshotChanges()
+      .pipe(
+        map(actions => {
+          console.log('Snapshot actions:', actions);  // Para ver todos los detalles
+          return actions.map(action => {
+            const data = action.payload.doc.data() as Clase;  // Aquí tipamos los datos como 'Clase'
+            const alumno = data.alumnos.find((a: any) => a.id_alumno === studentId);  // Tipado de alumnos
+            return {
+              fecha: data.fecha,
+              estado: alumno?.estado ? 'Presente' : 'Ausente',
+              asignatura: data.nombreAsignatura || 'Sin asignatura',
+            };
+          });
+        })
+      );
+  }
 
+  
+  
+  
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(

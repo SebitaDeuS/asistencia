@@ -13,6 +13,7 @@ export class QRProfePage implements OnInit {
   qrData: string = '';  
   asignaturaId: string | null = null;
   profesorId: string | null = null;
+  cursoId:string |null=null;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -21,21 +22,19 @@ export class QRProfePage implements OnInit {
     if (navigation && navigation.extras.state) {
       this.profesorId = navigation.extras.state['profesorId'];
       this.asignaturaId = navigation.extras.state['asignaturaId'];
+      this.cursoId= navigation.extras.state['cursoId'];
     } else {
-      // Usar sessionStorage como respaldo si `state` no está disponible
       this.profesorId = sessionStorage.getItem('profesorId');
       this.asignaturaId = sessionStorage.getItem('asignaturaId');
+      this.cursoId= sessionStorage.getItem('cursoId');
     }
 
-    // Verificar que los datos estén disponibles para generar el QR
     if (this.profesorId && this.asignaturaId) {
-      // Obtener fecha y hora actuales
       const fechaActual = new Date();
-      const fechaFormateada = fechaActual.toLocaleDateString(); // Ej: "20/10/2024"
-      const horaFormateada = fechaActual.toLocaleTimeString(); // Ej: "10:15:30 AM"
+      const fechaFormateada = fechaActual.toLocaleDateString(); 
+      const cursoId=this.cursoId;
       
-      // Generar los datos del QR incluyendo fecha y hora
-      this.qrData = `profesorId=${this.profesorId}&asignaturaId=${this.asignaturaId}&fecha=${fechaFormateada}&hora=${horaFormateada}`;
+      this.qrData = `profesorId=${this.profesorId} asignaturaId=${this.asignaturaId} fecha=${fechaFormateada} cursoId=${this.cursoId}`;
       console.log('Datos del QR:', this.qrData);
     } else {
       console.error('No se encontraron datos del profesor o asignatura en QRProfePage');

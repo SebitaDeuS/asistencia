@@ -16,15 +16,14 @@ export class LoginPage implements OnInit {
   usr: UsuarioLog = {
     email: '',
     password: '',
-    nombre_alumno:'',
+    nombre_alumno: '',
   };
-
 
   hide: boolean = true;
 
   firebaseSvc = inject(FireBaseService);
 
-  utilsSvc = inject(UtilsService)
+  utilsSvc = inject(UtilsService);
 
   constructor(
     private router: Router,
@@ -34,7 +33,7 @@ export class LoginPage implements OnInit {
   ngOnInit() {}
 
   showPassword() {
-    this.hide = !this.hide; // Alternar entre mostrar y ocultar
+    this.hide = !this.hide;
   }
 
   async iniciar_sesion() {
@@ -42,48 +41,38 @@ export class LoginPage implements OnInit {
       uid: '',
       email: this.usr.email,
       password: this.usr.password,
-      name: this.usr.nombre_alumno
+      name: this.usr.nombre_alumno,
     };
-  
+
     await this.utilsSvc.showLoading();
     try {
       const result = await this.firebaseSvc.signIn(user);
-      console.log('Usuario autenticado:', result.user);
-  
+
       if (user.email.endsWith('@profesor.com')) {
         const profesorId = result.user?.uid;
         if (profesorId) {
-          // Obtén las asignaturas del profesor
-          this.firebaseSvc.getAsignaturasProfesor(profesorId)
-              .pipe(take(1)) 
-              .subscribe((asignaturas) => {
-                console.log('Asignaturas del profesor:', asignaturas);
-  
-            // Guarda en sessionStorage como respaldo
-            sessionStorage.setItem('profesorId', profesorId);
-            sessionStorage.setItem('asignaturas', JSON.stringify(asignaturas));
-  
-            // Usa NavigationExtras para pasar los datos a vista-profe sin exponer en la URL
-            const navigationExtras: NavigationExtras = {
-              state: {
-                profesorId: profesorId,
-                asignaturas: asignaturas,
-              }
-            };
-            this.router.navigate(['/vista-profe'], navigationExtras);
-          });
+          this.firebaseSvc
+            .getAsignaturasProfesor(profesorId)
+            .pipe(take(1))
+            .subscribe((asignaturas) => {
+              sessionStorage.setItem('profesorId', profesorId);
+              sessionStorage.setItem('asignaturas',JSON.stringify(asignaturas)
+              );
+              const navigationExtras: NavigationExtras = {
+                state: {
+                  profesorId: profesorId,
+                  asignaturas: asignaturas,
+                },
+              };
+              this.router.navigate(['/vista-profe'], navigationExtras);
+            });
         }
       } else {
         this.firebaseSvc.getAlumnoData(user.email).subscribe((studentData) => {
-          console.log('correo alumno',user.email)
-          console.log('Datos del estudiante:', studentData);
-          console.log('Estructura de studentData:', JSON.stringify(studentData));
-  
-          // Pasar los datos a la página de inicio
           const navigationExtras: NavigationExtras = {
             state: {
-              studentData: JSON.parse(JSON.stringify(studentData)) // Supone que hay un solo documento por correo de alumno
-            }
+              studentData: JSON.parse(JSON.stringify(studentData)),
+            },
           };
           this.router.navigate(['/home'], navigationExtras);
         });
@@ -109,9 +98,7 @@ export class LoginPage implements OnInit {
         {
           text: 'Aceptar',
           cssClass: 'btn-verde',
-          handler: () => {
-            console.log('Apretó aceptar desde controller');
-          },
+          handler: () => {},
         },
       ],
     });

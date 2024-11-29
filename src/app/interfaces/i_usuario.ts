@@ -8,4 +8,13 @@ export interface StudentData {
     id_alumno: string;
     nombre_alumno: string
   }
-  
+  export interface Alumno {
+    id_alumno: string;
+    nombre_alumno: string;
+    estado: boolean;
+  }
+  export interface Clase {
+    fecha: string;  // O el tipo adecuado para la fechaa
+    nombreAsignatura: string;
+    alumnos: Alumno[];
+  }

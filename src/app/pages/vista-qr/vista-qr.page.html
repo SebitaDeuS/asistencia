@@ -1,45 +1,38 @@
-
 <ion-header>
   <ion-toolbar color="tertiary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
+      <ion-back-button (click)="volver_al_home()" text="Volver"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-capitalize" >Profesor</ion-title>
-    
+    <ion-title class="ion-text-capitalize">Profesor</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true" >
+
+<ion-content [fullscreen]="true">
   <div class="contenedor-qr">
     <ion-card color="primary">
       <ion-card-header class="tarjeta_header">
         <ion-card-title>Escanear QR</ion-card-title>
         <ion-card-subtitle>
           <div *ngIf="studentData">
-          <ion-card-subtitle>{{ studentData.nombre_alumno}}</ion-card-subtitle>
-          <ion-card-subtitle>{{ studentData.correo_alumno}}</ion-card-subtitle> 
-          <ion-card-subtitle>fecha</ion-card-subtitle>
-        </div>
+            <ion-card-subtitle>{{ studentData.nombre_alumno }}</ion-card-subtitle>
+            <ion-card-subtitle>{{ studentData.correo_alumno }}</ion-card-subtitle>
+            <ion-card-subtitle>Fecha</ion-card-subtitle>
+          </div>
         </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content class="tarjeta_content">
-        <ion-card-subtitle>Acerca el Celular a tu QR</ion-card-subtitle> 
+        <ion-card-subtitle>Acerca el Celular a tu QR</ion-card-subtitle>
         <img class="logo" src="assets/img/scaner.png" alt="">
-        <ion-button color="tertiary" (click)="scan()" [disabled]="!isSupported" >
+        <ion-button color="tertiary" (click)="scan()" [disabled]="!isSupported">
           Escanear
         </ion-button>
         <br>
         <ion-button (click)="volver_al_home()" color="primary">
-         Cancelar
+          Cancelar
         </ion-button>
-        </ion-card-content>
+      </ion-card-content>
     </ion-card>
-    
-  
   </div>
 </ion-content>
 
-
 <app-menu></app-menu>
-
-
-

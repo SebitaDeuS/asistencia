@@ -1,5 +1,5 @@
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Component, OnInit,inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { UsuarioLog } from 'src/app/interfaces/i_usuario';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Router } from '@angular/router';
@@ -16,12 +16,10 @@ export class RegistroPage implements OnInit {
   usr: UsuarioLog = {
     email: '',
     password: '',
-    nombre_alumno:'',
+    nombre_alumno: '',
   };
 
-
-  utilsSvc = inject(UtilsService)
-
+  utilsSvc = inject(UtilsService);
 
   constructor(
     private afAuth:AngularFireAuth,
@@ -29,9 +27,7 @@ export class RegistroPage implements OnInit {
      private authService: AuthService,
      private toastController: ToastController)   { }
 
-  ngOnInit(){
-    
-  }
+  ngOnInit() {}
 
   async registro() {
     if (!this.validarCorreo(this.usr.email)) {
@@ -53,6 +49,13 @@ export class RegistroPage implements OnInit {
 
         console.log('Usuario registrado:', userCredential.user);
         if (userCredential.user) {
+          const userData = {
+            uid: userCredential.user.uid,
+            email: this.usr.email,
+            password: this.usr.password,
+            nombre_alumno: this.usr.nombre_alumno,
+          };
+
           await this.authService.saveUserDataToFirestore(
             userCredential.user.uid,
             this.usr.email,
@@ -108,5 +111,3 @@ export class RegistroPage implements OnInit {
   }
   
 }
-
-
