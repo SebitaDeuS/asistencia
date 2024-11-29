@@ -14,7 +14,7 @@ export interface StudentData {
     estado: boolean;
   }
   export interface Clase {
-    fecha: string;  // O el tipo adecuado para la fecha
+    fecha: string;  // O el tipo adecuado para la fechaa
     nombreAsignatura: string;
     alumnos: Alumno[];
   }
