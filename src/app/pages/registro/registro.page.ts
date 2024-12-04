@@ -41,7 +41,6 @@ export class RegistroPage implements OnInit {
       const isConnected = await this.checkConnection();
 
       if (isConnected) {
-        // Registro normal con conexión a Internet
         const userCredential = await this.afAuth.createUserWithEmailAndPassword(
           this.usr.email,
           this.usr.password
@@ -65,7 +64,6 @@ export class RegistroPage implements OnInit {
         }
         this.router.navigate(['/login']);
       } else {
-        // Sin conexión: guardar usuario en localStorage
         console.log('Sin conexión: Guardando usuario en localStorage');
         const pendingUsers = JSON.parse(localStorage.getItem('pendingUsers') || '[]');
         pendingUsers.push({
@@ -78,7 +76,6 @@ export class RegistroPage implements OnInit {
       }
     } catch (error: any) {
       if (error.code === 'auth/email-already-in-use') {
-        // Muestra un Toast si el correo ya está en uso
         this.showToast('El correo ya está registrado. Intenta con otro.', 'danger');
       } else {
         console.error('Error durante el registro:', error);
@@ -94,7 +91,6 @@ export class RegistroPage implements OnInit {
     return formatoCorreo.test(email);
   }
 
-  // Método para verificar la conexión a Internet
   private async checkConnection(): Promise<boolean> {
     const status = await Network.getStatus();
     return status.connected;
@@ -103,9 +99,9 @@ export class RegistroPage implements OnInit {
   async showToast(message: string, color: string) {
     const toast = await this.toastController.create({
       message,
-      duration: 3000, // Duración en milisegundos
-      color, // Color del Toast (puede ser 'primary', 'success', 'danger', etc.)
-      position: 'top', // Posición del Toast ('top', 'middle', 'bottom')
+      duration: 3000, 
+      color, 
+      position: 'top',
     });
     await toast.present();
   }

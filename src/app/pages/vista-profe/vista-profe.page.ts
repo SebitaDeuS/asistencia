@@ -124,12 +124,10 @@ async sincronizarAsignaturasPendientes() {
         const status = await Network.getStatus();
 
         if (status.connected) {
-          // Si hay conexión, guarda directamente en Firebase
           await this.firebaseService.guardarAsignaturaEnFirebase(result.data.asignatura);
           this.utilsSvc.showToast(`Asignatura "${result.data.asignatura.nombre}" creada con éxito.`);
           this.cargarAsignaturas();
         } else {
-          // Si no hay conexión, guarda en localStorage
           const asignaturasPendientes = JSON.parse(localStorage.getItem('asignaturasPendientes') || '[]');
           asignaturasPendientes.push(result.data.asignatura);
           localStorage.setItem('asignaturasPendientes', JSON.stringify(asignaturasPendientes));

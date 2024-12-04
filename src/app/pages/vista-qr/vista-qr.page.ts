@@ -27,18 +27,15 @@ export class VistaQrPage implements OnInit {
   ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
       this.isSupported = result.supported;
-      this.showAlert('Escaneo de QR soportado: ' + this.isSupported);
     });
   
     const navigationState = history.state;
     if (navigationState && navigationState.student) {
       this.studentData = navigationState.student;
-      this.showAlert('Datos del estudiante en Vista QR: ' + JSON.stringify(this.studentData));
     } else {
       this.showAlert('No se recibieron datos del estudiante en Vista QR');
     }
   
-    // Escuchar cambios en el estado de la red
     Network.addListener('networkStatusChange', async (status) => {
   console.log('Estado de red cambiado:', status);
   if (status.connected) {
@@ -49,7 +46,6 @@ export class VistaQrPage implements OnInit {
   }
 });
   
-    // Verificar el estado inicial de la red
     Network.getStatus().then(async (status) => {
       console.log('Estado inicial de red:', status);
       if (status.connected) {
@@ -60,9 +56,7 @@ export class VistaQrPage implements OnInit {
   }
 
   async scan(): Promise<void> {
-    this.showAlert('Iniciando escaneo...');
   
-    // Primero, guardamos los datos en localStorage para asegurar que se guarden
     this.saveOfflineData({
       profesorId: this.studentData.profesorId,
       asignaturaId: this.studentData.asignaturaId,
@@ -76,9 +70,7 @@ export class VistaQrPage implements OnInit {
     });
   
     const granted = await this.requestPermissions();
-    this.showAlert('Permisos otorgados: ' + granted);
     if (!granted) {
-      await this.presentAlert('Permisos denegados para la cámara');
       return;
     }
   
@@ -100,7 +92,6 @@ export class VistaQrPage implements OnInit {
       const fecha = dataMap['fecha'];
       const cursoId = dataMap['cursoId'];
   
-      await this.showQRDataAlert(dataMap);
   
       const alumnoData = {
         id_alumno: this.studentData.id_alumno,
@@ -113,7 +104,7 @@ export class VistaQrPage implements OnInit {
           .collection('secciones').doc(asignaturaId)
           .collection('Clases').doc(fecha);
   
-        if (navigator.onLine) {  // Verificar si estamos en línea
+        if (navigator.onLine) {  
           try {
             await claseRef.update({
               alumnos: arrayUnion(alumnoData),
@@ -131,7 +122,6 @@ export class VistaQrPage implements OnInit {
             }
           }
         } else {
-          // Guardar los datos offline si estamos sin conexión
           this.showAlert('Sin conexión a la red, los datos se guardarán en localStorage.');
           this.saveOfflineData({
             profesorId,
@@ -160,11 +150,9 @@ export class VistaQrPage implements OnInit {
   
   
 
-  // Sincronizar datos guardados cuando el usuario vuelve a estar en línea
   saveOfflineData(data: any) {
     let offlineData = JSON.parse(localStorage.getItem('offlineData') || '[]');
     offlineData.push(data);
-    this.showAlert('Guardando datos en localStorage: ' + JSON.stringify(data));
     localStorage.setItem('offlineData', JSON.stringify(offlineData));
   }
   
@@ -175,7 +163,7 @@ export class VistaQrPage implements OnInit {
         await this.syncOfflineData();
       } else {
         console.log('No hay conexión. Esperando reintentar...');
-        this.retrySync(5000); // Reintentar después de 5 segundos
+        this.retrySync(5000);
       }
     }, delay);
   }
@@ -189,7 +177,7 @@ export class VistaQrPage implements OnInit {
       return;
     }
   
-    const remainingData = []; // Para los datos que no se sincronizaron correctamente
+    const remainingData = []; 
   
     for (const data of offlineData) {
       const claseRef = this.firestore.collection('cursos').doc(data.cursoId)
@@ -197,7 +185,6 @@ export class VistaQrPage implements OnInit {
         .collection('Clases').doc(data.fecha);
   
       try {
-        // Intentar sincronizar con Firestore
         await claseRef.update({
           alumnos: arrayUnion(data.alumnoData),
         });
@@ -205,7 +192,6 @@ export class VistaQrPage implements OnInit {
       } catch (error) {
         console.error('Error al sincronizar:', error);
   
-        // Intentamos manejar los errores de Firestore
         if (error.code === 'not-found') {
           try {
             await claseRef.set({ alumnos: [data.alumnoData] });
@@ -220,7 +206,6 @@ export class VistaQrPage implements OnInit {
       }
     }
   
-    // Actualizar `localStorage` solo con los datos pendientes
     if (remainingData.length > 0) {
       localStorage.setItem('offlineData', JSON.stringify(remainingData));
       console.log('Datos restantes no sincronizados:', remainingData);
@@ -268,7 +253,6 @@ export class VistaQrPage implements OnInit {
     await alert.present();
   }
 
-  // Alerta adicional para mensajes generales
   async presentAlert(message: string): Promise<void> {
     const alert = await this.alertController.create({
       header: 'Aviso',
@@ -279,10 +263,9 @@ export class VistaQrPage implements OnInit {
     await alert.present();
   }
 
-  // Función para mostrar alertas de depuración
   async showAlert(message: string): Promise<void> {
     const alert = await this.alertController.create({
-      header: 'Depuración',
+      header: 'Alerta',
       message: message,
       buttons: ['OK'],
     });
