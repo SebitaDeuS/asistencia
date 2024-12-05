@@ -43,14 +43,24 @@ export class HomePage implements OnInit {
   }
 
   asistencia() {
-    if (this.studentData) {
-      console.log('llendo a vista_asistencia');
-      this.navCtrl.navigateForward('/vista-asistencia', {
-        state: { student: this.studentData.id_alumno }
-      });
-      console.log('datos del alumno mandados', this.studentData.id_alumno);
-    }
+    const navigationextra:NavigationExtras={
+      state:{
+        student: this.studentData.id_alumno 
+      }
+    };
+    this.router.navigate(["/vista-asistencia"],navigationextra)
+    console.log('llendo a /vista-asistencia');
   }
+
+  // ejemplo() {
+  //   const navigationExtras: NavigationExtras = {
+  //     state: {
+  //      datos 
+  //     }
+  //   };
+  //   console.log('Datos a lista-pres:', navigationExtras);
+  //   this.router.navigate(["/lista-pres"], navigationExtras);
+  // }
 
   profe() {
     this.router.navigate(['/vista-profe']); 
