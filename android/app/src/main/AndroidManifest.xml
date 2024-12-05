@@ -8,15 +8,14 @@
   <uses-permission android:name="android.permission.FLASHLIGHT" />
 
   <application
-    android:icon="@mipmap/ic_launcher"
-    android:roundIcon="@mipmap/ic_launcher_round">
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
+    android:roundIcon="@mipmap/ic_launcher_round"
     android:label="@string/app_name"
-    android:roundIcon="uoc@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
 
+    <!-- Actividad principal -->
     <activity
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
       android:name=".MainActivity"
@@ -29,9 +28,9 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-
     </activity>
 
+    <!-- Proveedor de archivos -->
     <provider
       android:name="androidx.core.content.FileProvider"
       android:authorities="${applicationId}.fileprovider"
@@ -42,7 +41,9 @@
         android:resource="@xml/file_paths" />
     </provider>
 
-    <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="barcode_ui"/>
+    <!-- Configuración de ML Kit -->
+    <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="barcode_ui" />
   </application>
+
 
 </manifest>

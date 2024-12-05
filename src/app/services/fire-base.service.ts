@@ -55,7 +55,19 @@ export class FireBaseService {
 
   
   
-  
+  getAsistenciaPorFechaYSeccion(cursoId: string, asignaturaId: string, fecha: string) {
+    const path = `cursos/${cursoId}/secciones/${asignaturaId}/Clases/${fecha}/alumnos`;
+    console.log('Consultando en Firestore en la ruta:', path); // Imprimir la ruta para verificar
+    return this.firestore
+      .collection('cursos')
+      .doc(cursoId)
+      .collection('secciones')
+      .doc(asignaturaId)
+      .collection('Clases')
+      .doc(fecha)
+      .collection('alumnos')
+      .valueChanges();
+  }
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(

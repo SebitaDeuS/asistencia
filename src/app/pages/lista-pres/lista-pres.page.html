@@ -1,75 +1,43 @@
-
 <ion-header>
   <ion-toolbar color="tertiary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/codigoprofe" text="Volver"></ion-back-button>
     </ion-buttons>
-    <ion-title class="ion-text-capitalize" >Profesor</ion-title>
-    <ion-icon slot="end" name="person" class="ion-padding" size="large"></ion-icon>
-  
+    <ion-title>Profesor</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <div class="contenedor-imagen">
-    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="">
+    <img class="logo" src="assets/img/Logo_DuocUC.png" alt="Logo DuocUC">
   </div>
-    
+
   <ion-list [inset]="true" lines="full" mode="ios">
     <ion-list-header mode="ios" color="primary">
-      <ion-label>Lista de Alumnos</ion-label>
+      <ion-label>Lista de Alumnos - {{ fechaHoy }}</ion-label>
     </ion-list-header>
-    <div  class="scrollable-table">
+    <div class="scrollable-table">
       <table>
-        <tr>
-          <th>Run</th>
-          <th>Nombre</th>
-          <th>Asistencia</th>
-      </tr>
-      <tr>
-        <td>21636372-8</td>
-        <td>Jonathan Molina</td>
-        <td>Pesente</td>
-      </tr>
-      <tr>
-        <td>21636372-8</td>
-        <td>Jonathan Molina</td>
-        <td>Pesente</td>
-      </tr>
-      <tr>
-        <td>21636372-8</td>
-        <td>Jonathan Molina</td>
-        <td>Pesente</td>
-      </tr>
-      <tr>
-        <td>21636372-8</td>
-        <td>Jonathan Molina</td>
-        <td>Pesente</td>
-      </tr>
+        <thead>
+          <tr>
+            <th>Run</th>
+            <th>Nombre</th>
+            <th>Asistencia</th> <!-- Aquí tienes la columna de asistencia -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let alumno of alumnos">
+            <td>{{ alumno.id_alumno }}</td>
+            <td>{{ alumno.nombre_alumno }}</td>
+            <td>{{ alumno.asistencia || 'No registrada' }}</td> <!-- Aquí mostrarías el estado de asistencia -->
+          </tr>
+        </tbody>
       </table>
     </div>
     <div class="buttons">
-      <ion-button type="submit" expand="block" fill="solid" (click)="al_vistaprofe()">
-       Volver
+      <ion-button expand="block" fill="solid" (click)="al_vistaprofe()">
+        Volver
       </ion-button>
     </div>
   </ion-list>
-
-
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <div class="footer-buttons" style="display: flex; justify-content: center; align-items: center;gap: 50px;width: 100%;font-size: 200px;">
-      <ion-button  routerLink="/home" fill="clear" color="custom">
-        <ion-icon slot="icon-only" name="home-outline"  style="font-size: 30px; color: black;"></ion-icon>
-      </ion-button>
-      <ion-button  fill="clear" routerLink="/vista-perfil-usuario">
-        <ion-icon slot="icon-only" name="person-outline" style="font-size: 30px; color: black;"></ion-icon>
-      </ion-button>
-      <ion-button  fill="clear">
-        <ion-icon slot="icon-only" name="settings-outline" style="font-size: 30px; color: black;"></ion-icon>
-      </ion-button>
-    </div>
-  </ion-toolbar>
-</ion-footer>
-

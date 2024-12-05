@@ -23,12 +23,7 @@ export class CodigoprofePage implements OnInit {
     private firebsv: FireBaseService,
 
   ) { 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        console.log('Navegación detectada desde Codigoprofe:', event.url);
-        console.trace();
-      }
-    });
+    
   }
 
   ngOnInit() {
@@ -99,6 +94,14 @@ export class CodigoprofePage implements OnInit {
   }
 
   a_lista() {
-    this.router.navigate(["/lista-pres"]);
+    const navigationExtras: NavigationExtras = {
+      state: {
+        profesorId: this.profesorId,
+        cursoId: this.cursoId,
+        asignaturaId: this.asignaturaId 
+      }
+    };
+    console.log('Datos a lista-pres:', navigationExtras);
+    this.router.navigate(["/lista-pres"], navigationExtras);
   }
 }
