@@ -75,18 +75,34 @@ export class FireBaseService {
         return [];
       })
     );
-}
+  }
 
   
   
+getAsignaturaAlumno(idalumno:string,cursoId:string): Observable<string[]>{
+  return this.firestore
+  .collection('cursos')
+  .doc(cursoId)
+  .get()
+  .pipe(
+    map((doc) => {
+      const data = doc.data();
+      if (data && data['nombre']) {
+        return data['nombre'].map((curso: any) => ({
+          nombre: curso.nombre,
+        }));
+      }
+      return [];
+    })
+  );
   
+}
   
-  
-  
-  
-  
-  
-  
+getAsignaturasPorAlumno(idAlumno: string): Observable<any[]> {
+  return this.firestore
+  .collection('cursos')
+  .snapshotChanges()
+}
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(
@@ -95,7 +111,6 @@ export class FireBaseService {
           const cursoData = curso.payload.doc.data() as { nombre?: string };
           return cursoData.nombre; 
         });
-  
         return combineLatest(
           cursosFiltrados.map((curso) => {
             const cursoData = curso.payload.doc.data() as { nombre: string };

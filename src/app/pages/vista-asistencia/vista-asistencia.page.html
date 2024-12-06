@@ -16,25 +16,12 @@
     <div class="contenedor-tabla">
       <ion-accordion-group>
         <!-- Recorremos las asignaturas obtenidas -->
-        <ion-accordion *ngFor="let asignatura of asignaturas" [value]="asignatura.asignatura">
+        <ion-accordion *ngFor="let c of clases" >
           <ion-item slot="header">
-            <ion-label>{{ asignatura.asignatura }}</ion-label>
+            <ion-label>{{ c.cursoId }}</ion-label>
+            
           </ion-item>
           <ion-list slot="content" class="limited-height-list">
-            <ion-item style="font-weight: bold;">
-              <ion-label>Fecha</ion-label>
-              <ion-label slot="end">Asistencia</ion-label>
-            </ion-item>
-            <!-- Recorremos las asistencias de la asignatura -->
-            <ion-item *ngFor="let asistencia of asignatura.asistencias">
-              <ion-label>{{ asistencia.fecha }}</ion-label>
-              <ion-label
-                [color]="asistencia.estado === 'Presente' ? 'success' : 'danger'"
-                slot="end"
-              >
-                {{ asistencia.estado }}
-              </ion-label>
-            </ion-item>
           </ion-list>
         </ion-accordion>
       </ion-accordion-group>

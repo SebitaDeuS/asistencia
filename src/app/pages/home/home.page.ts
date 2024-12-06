@@ -45,7 +45,9 @@ export class HomePage implements OnInit {
   asistencia() {
     const navigationextra:NavigationExtras={
       state:{
-        student: this.studentData.id_alumno 
+        student: this.studentData.id_alumno,
+        // cursoId: this.cursoId,
+        // asignaturaId: this.asignaturaId 
       }
     };
     this.router.navigate(["/vista-asistencia"],navigationextra)

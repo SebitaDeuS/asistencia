@@ -12,7 +12,7 @@
     <img class="logo" src="assets/img/Logo_DuocUC.png" alt="Logo DuocUC">
   </div>
 
-  <ion-list [inset]="true" lines="full" mode="ios">
+  <ion-list [inset]="true" lines="full" mode="ios" id="cuadro">
     <ion-list-header mode="ios" color="primary">
       <ion-label>Lista de Alumnos - {{ fechaHoy }}</ion-label>
     </ion-list-header>
@@ -21,13 +21,13 @@
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>Asistencia</th> <!-- Aquí tienes la columna de asistencia -->
+            <th>Estado</th> 
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let a of alumnos">
             <td>{{ a.nombre }}</td>
-            <td>En Clase</td> <!-- Aquí mostrarías el estado de asistencia -->
+            <td>Presente</td> 
           </tr>
         </tbody>
       </table>
