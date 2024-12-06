@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Navigation } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { FireBaseService } from 'src/app/services/fire-base.service';
-
+import { Alumno } from 'src/app/interfaces/i_usuario';
 @Component({
   selector: 'app-lista-pres',
   templateUrl: './lista-pres.page.html',
@@ -12,7 +12,8 @@ export class ListaPresPage implements OnInit {
   cursoId: string = '';
   seccionId: string = ''; 
   fechaHoy: string = '';
-  alumnos: any[] = []; 
+  alumnos: any[] ; 
+  cursos: string[] = []; 
   constructor(
     private router: Router,
     private firebsv: FireBaseService,
@@ -20,7 +21,9 @@ export class ListaPresPage implements OnInit {
     private navCtrl: NavController,
   ) {}
 
-  ngOnInit() {
+  ngOnInit():void {
+   
+
     const navigation = this.router.getCurrentNavigation();
     if (navigation && navigation.extras.state) {
       this.cursoId = navigation.extras.state['cursoId'];
@@ -30,41 +33,25 @@ export class ListaPresPage implements OnInit {
       this.cursoId = sessionStorage.getItem('cursoId') || '';
       this.seccionId = sessionStorage.getItem('asignaturaId') || ''; 
     }
-  
     const fechaActual = new Date();
-    this.fechaHoy = `${fechaActual.getDate()}-${fechaActual.getMonth() + 1}-${fechaActual.getFullYear()}`;
+      const fechaFormateada = fechaActual.toLocaleDateString();
+this.fechaHoy = `${fechaActual.getDate()}-${fechaActual.getMonth() + 1}-${fechaActual.getFullYear()}`;
+
+this.firebsv.getCursos(this.cursoId,this.seccionId,fechaFormateada).subscribe(alumnos => {
+  console.log('IDs de los cursos:', alumnos);
+  this.alumnos = alumnos;  // Guardamos los IDs en la variable cursos
+});
+}
+
+
+
   
-    if (this.cursoId && this.seccionId) {
-      this.cargarAsistencia();
-    }
-  }
   
   
   
 
-  cargarAsistencia() {
-    if (this.cursoId && this.seccionId && this.fechaHoy) {
-      console.log(`Ruta Firestore: cursos/${this.cursoId}/secciones/${this.seccionId}/Clases/${this.fechaHoy}/alumnos`);
-      this.firebsv.getAsistenciaPorFechaYSeccion(this.cursoId, this.seccionId, this.fechaHoy).subscribe(
-        (data) => {
-          console.log('Datos de alumnos:', data); // Verifica la estructura de los datos
-          this.alumnos = data;
-          console.log('Alumnos presentes:', this.alumnos);
-        },
-        (error) => {
-          console.error('Error al cargar la asistencia:', error);
-        }
-      );
-    } else {
-      console.error('Faltan datos para cargar la asistencia:', {
-        cursoId: this.cursoId,
-        seccionId: this.seccionId,
-        fechaHoy: this.fechaHoy
-      });
-    }
-  }
   
-
+  
   al_vistaprofe() {
     this.navCtrl.back();
   }

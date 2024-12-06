@@ -20,16 +20,14 @@
       <table>
         <thead>
           <tr>
-            <th>Run</th>
             <th>Nombre</th>
             <th>Asistencia</th> <!-- Aquí tienes la columna de asistencia -->
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let alumno of alumnos">
-            <td>{{ alumno.id_alumno }}</td>
-            <td>{{ alumno.nombre_alumno }}</td>
-            <td>{{ alumno.asistencia || 'No registrada' }}</td> <!-- Aquí mostrarías el estado de asistencia -->
+          <tr *ngFor="let a of alumnos">
+            <td>{{ a.nombre }}</td>
+            <td>En Clase</td> <!-- Aquí mostrarías el estado de asistencia -->
           </tr>
         </tbody>
       </table>

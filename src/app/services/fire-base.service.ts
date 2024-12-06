@@ -3,11 +3,12 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
-import { catchError, Observable } from 'rxjs';
+import { catchError, Observable, tap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';  // Necesario para un almacenamiento reactivo
 import{Clase,Alumno} from '../interfaces/i_usuario';
 import { Network } from '@capacitor/network';
 import { mergeMap, combineLatest, map, concatMap, of } from 'rxjs';
+import { collectionData, collection,CollectionReference, } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
@@ -53,21 +54,39 @@ export class FireBaseService {
       );
   }
 
+  getCursos(cursoId: string, seccionId: string, fecha: string): Observable<string[]> {
+  return this.firestore
+    .collection('cursos') 
+    .doc(cursoId)
+    .collection('secciones')
+    .doc(seccionId)
+    .collection('Clases')
+    .doc(fecha)
+    .get()
+    .pipe(
+      map((doc) => {
+        const data = doc.data();
+        if (data && data['alumnos']) {
+          return data['alumnos'].map((alumno: any) => ({
+            id: alumno.id_alumno,
+            nombre: alumno.nombre_alumno,
+          }));
+        }
+        return [];
+      })
+    );
+}
+
   
   
-  getAsistenciaPorFechaYSeccion(cursoId: string, asignaturaId: string, fecha: string) {
-    const path = `cursos/${cursoId}/secciones/${asignaturaId}/Clases/${fecha}/alumnos`;
-    console.log('Consultando en Firestore en la ruta:', path); // Imprimir la ruta para verificar
-    return this.firestore
-      .collection('cursos')
-      .doc(cursoId)
-      .collection('secciones')
-      .doc(asignaturaId)
-      .collection('Clases')
-      .doc(fecha)
-      .collection('alumnos')
-      .valueChanges();
-  }
+  
+  
+  
+  
+  
+  
+  
+  
 
   getAsignaturasProfesor(idProfesor: string): Observable<any[]> {
     return this.firestore.collection('cursos').snapshotChanges().pipe(

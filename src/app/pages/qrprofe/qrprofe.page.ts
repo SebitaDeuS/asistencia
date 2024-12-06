@@ -50,7 +50,7 @@ export class QRProfePage implements OnInit {
           profesorId: this.profesorId,
         },
       };
-      this.router.navigate(['/vista-profe'], navigationExtras);
+      this.router.navigate(['/codigoprofe'], navigationExtras);
     } else {
       console.error('No se encontró el ID del profesor');
     }
