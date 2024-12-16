@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FireBaseService } from 'src/app/services/fire-base.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -12,8 +10,8 @@ import { NavController } from '@ionic/angular';
 })
 export class VistaAsistenciaPage implements OnInit {
   studentId: string;
-  asignaturas: any[] = []; 
-
+  clases:any[];
+  clasesAlumno: any[] = [];
   constructor(
     private router: Router,
     private firestoreService: FireBaseService,
@@ -29,22 +27,19 @@ export class VistaAsistenciaPage implements OnInit {
   }
 
   ngOnInit() {
+    this.firestoreService.getclasealumno(this.studentId).subscribe(clases=>{
+      console.log('distintas clases:',clases)
+      this.clases=clases;
+      
+  });
     if (this.studentId) {
       console.log('Datos del estudiante en VistaAsistencia del ngOnInit:', this.studentId);
-  
-      this.firestoreService.getAsistenciasEstudiante(this.studentId).subscribe(
-        asignaturas => {
-          console.log('Asignaturas y clases recuperadas:', asignaturas); 
-          this.asignaturas = asignaturas; 
-        },
-        error => {
-          console.error('Error al obtener las asignaturas:', error); 
-        }
-      );
     } else {
       console.log('No se recibieron datos de estudiante en el ngOnInit');
     }
   }
+  
+
   volver_al_home() {
     this.navCtrl.back();
   }

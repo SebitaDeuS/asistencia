@@ -77,7 +77,6 @@ export class VistaQrPage implements OnInit {
     const { barcodes } = await BarcodeScanner.scan();
     if (barcodes.length > 0) {
       const qrData = barcodes[0].displayValue;
-      this.showAlert('Datos del QR: ' + qrData);
   
       const dataMap = qrData.split(' ').reduce((acc, pair) => {
         const [key, value] = pair.split('=');
@@ -98,25 +97,45 @@ export class VistaQrPage implements OnInit {
         nombre_alumno: this.studentData.nombre_alumno,
         estado: true,
       };
+      
+      const AlumnoLista={
+
+        id_alumno: this.studentData.id_alumno,
+        nombre_alumno: this.studentData.nombre_alumno,
+        estado: true,
+        cursoid:cursoId,
+        asignaturaId:asignaturaId,
+        fecha_presente:fecha
+      }
   
       if (profesorId && asignaturaId && fecha && cursoId && this.studentData) {
         const claseRef = this.firestore.collection('cursos').doc(cursoId)
           .collection('secciones').doc(asignaturaId)
           .collection('Clases').doc(fecha);
-  
+
+        const listaRef = this.firestore.collection('ListaAlumnos')
+                                        .doc(this.studentData.id_alumno)
+                                        
+                    
+                                        
         if (navigator.onLine) {  
           try {
             await claseRef.update({
               alumnos: arrayUnion(alumnoData),
             });
-  
+            await listaRef.update({
+              alumnos: arrayUnion(alumnoData),
+            });
+
             await this.SuccesAlert();
             this.showAlert('Datos del alumno guardados en Firestore con estado presente.');
           } catch (error) {
             this.showAlert('Error al registrar al alumno en Firestore: ' + error);
             if (error.code === 'not-found') {
               await claseRef.set({ alumnos: [alumnoData] });
-              this.showAlert('Documento creado y alumno registrado.');
+              await listaRef.set({ alumnos: [AlumnoLista] });
+             
+              
             } else {
               await this.ErrorPresente('Error al registrar el alumno');
             }
@@ -129,6 +148,7 @@ export class VistaQrPage implements OnInit {
             fecha,
             cursoId,
             alumnoData,
+            AlumnoLista,
           });
           await this.SuccesAlert();
         }
@@ -159,7 +179,7 @@ export class VistaQrPage implements OnInit {
   async retrySync(delay: number) {
     setTimeout(async () => {
       if (navigator.onLine) {
-        this.showAlert('Reintentando sincronizar datos offline...');
+        
         await this.syncOfflineData();
       } else {
         console.log('No hay conexión. Esperando reintentar...');

@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { User } from '../models/user.model';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, Observable, tap,switchMap } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';  // Necesario para un almacenamiento reactivo
 import{Clase,Alumno} from '../interfaces/i_usuario';
 import { Network } from '@capacitor/network';
@@ -77,7 +77,42 @@ export class FireBaseService {
     );
 }
 
-  
+getclasealumno(estudianteid: string): Observable<any> {
+  return this.firestore
+    .collection('ListaAlumnos')
+    .doc(estudianteid)  // Accedes al documento del estudiante
+    .get() 
+    .pipe(
+      map((doc) => {
+        const data = doc.data();
+        if (data && data['alumnos']) {
+          return data['alumnos'].map((alumno: any) => ({
+            id: alumno.id_alumno,
+            nombre: alumno.nombre_alumno,
+            fecha:alumno.fecha_presente,
+            estado:alumno.estado,
+            cursoid:alumno.cursoid,
+            asignatura:alumno.asignaturaId
+            
+          }));
+        }
+        return [];
+      })
+    );
+}
+
+
+
+
+getAsistencias(alumnoId: string, asignaturaId: string): Observable<any[]> {
+  return this.firestore
+    .collection('ListaAlumnos') 
+    .doc(alumnoId)
+    .collection('Cursos')
+    .doc(asignaturaId) // Documento específico de la asignatura
+    .collection('Clases') // Subcolección de fechas de clase
+    .valueChanges(); // Retorna las fechas de asistencia
+}
   
   
   
